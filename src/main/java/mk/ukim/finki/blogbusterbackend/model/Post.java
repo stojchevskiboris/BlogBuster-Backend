@@ -38,16 +38,19 @@ public class Post {
     @ManyToMany(mappedBy = "likedPosts")
     private List<User> likedByUsers;
 
+    @Lob
+    @Column(name = "image", columnDefinition="BLOB")
+    private byte[] image;
 
 
-
-    public Post(String title, String content, User author, Category category) {
+    public Post(String title, String content, User author, Category category, byte[] image) {
         this.title = title;
         this.content = content;
         this.author = author;
         this.category = category;
         this.comments = new ArrayList<>();
         this.likedByUsers = new ArrayList<>();
+        this.image = image;
     }
 
 
