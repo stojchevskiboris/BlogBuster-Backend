@@ -14,6 +14,7 @@ import java.util.Set;
 
 @Entity
 @Data
+@Table(name = "blog_users")
 @RequiredArgsConstructor
 public class User {
     @Id
@@ -43,7 +44,7 @@ public class User {
     @ManyToMany
     private List<Category> followingCategories;
 
-    @ManyToMany(mappedBy = "likedByUsers")
+    @ManyToMany//(mappedBy = "likedByUsers")
     private List<Post> likedPosts;
 
     public User(String firstName, String lastName, String username, String email, String password) {

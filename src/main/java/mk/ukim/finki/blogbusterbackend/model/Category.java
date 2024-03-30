@@ -10,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Table(name = "blog_categories")
 @RequiredArgsConstructor
 public class Category {
     @Id

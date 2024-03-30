@@ -13,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Table(name = "blog_posts")
 @RequiredArgsConstructor
 public class Post {
     @Id

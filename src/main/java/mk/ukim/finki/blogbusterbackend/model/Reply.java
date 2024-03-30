@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Entity
 @Data
+@Table(name = "blog_replies")
 @RequiredArgsConstructor
 public class Reply {
     @Id
