@@ -11,5 +11,8 @@ public class UserDTO {
     private String email;
     private String biography;
 
+    private String password;
+    private String matchingPassword;
+
 
 }
