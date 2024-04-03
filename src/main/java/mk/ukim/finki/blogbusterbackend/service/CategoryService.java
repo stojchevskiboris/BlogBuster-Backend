@@ -49,8 +49,8 @@ public class CategoryService {
                 map(CategoryMapper::MapToViewModel).orElse(null);
     }
 
-    public List<PostDTO> getPostsByCategory(Category category) {
-        List<Post> posts = this.postRepository.findPostsByCategoryContaining(category);
+    public List<PostDTO> getPostsByCategoryId(Long categoryId) {
+        List<Post> posts = this.postRepository.findPostsByCategoryId(categoryId);
         return PostMapper.MapToListViewModel(posts);
     }
     public void addCategory(CategoryDTO categoryDTO) {

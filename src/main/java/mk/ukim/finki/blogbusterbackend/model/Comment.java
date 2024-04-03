@@ -3,6 +3,7 @@ package mk.ukim.finki.blogbusterbackend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import mk.ukim.finki.blogbusterbackend.model.dto.CommentDTO;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
@@ -41,6 +42,7 @@ public class Comment {
         this.post = post;
         this.replies = new ArrayList<>();
     }
+
 
 
 }
