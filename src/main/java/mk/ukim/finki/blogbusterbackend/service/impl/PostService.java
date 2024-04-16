@@ -1,4 +1,4 @@
-package mk.ukim.finki.blogbusterbackend.service;
+package mk.ukim.finki.blogbusterbackend.service.impl;
 
 import jakarta.transaction.Transactional;
 import mk.ukim.finki.blogbusterbackend.model.Category;
@@ -9,9 +9,10 @@ import mk.ukim.finki.blogbusterbackend.model.mappers.PostMapper;
 import mk.ukim.finki.blogbusterbackend.repository.CategoryRepository;
 import mk.ukim.finki.blogbusterbackend.repository.PostRepository;
 import mk.ukim.finki.blogbusterbackend.repository.UserRepository;
+import mk.ukim.finki.blogbusterbackend.utils.UserUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ public class PostService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<PostDTO> getAllPosts(){
+    public List<PostDTO> getAllPosts() {
         List<Post> posts = this.postRepository.findAll();
         return PostMapper.MapToListViewModel(posts);
     }
@@ -37,20 +38,20 @@ public class PostService {
         return post.map(PostMapper::MapToViewModel).orElse(null);
     }
 
-    public List<PostDTO> getAllByUserId(Long authorId){
+    public List<PostDTO> getAllByUserId(Long authorId) {
         List<Post> posts = this.postRepository.findPostsByAuthorId(authorId);
         return PostMapper.MapToListViewModel(posts);
     }
 
 
     @Transactional
-    public boolean addPost(PostDTO postDto) throws Exception {
-        Optional<User> user = userRepository.findByUsername(postDto.getAuthorUsername());
-        if (user.isEmpty()){
+    public Optional<Post> addPost(PostDTO postDto) throws Exception {
+        Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
+        if (user.isEmpty()) {
             throw new Exception("User not existing");
         }
         Optional<Category> category;
-        if (postDto.getCategoryName() == null || postDto.getCategoryName().isEmpty()){
+        if (postDto.getCategoryName() == null || postDto.getCategoryName().isEmpty()) {
             category = Optional.empty();
         } else {
             category = categoryRepository.findCategoryByName(postDto.getCategoryName());
@@ -63,30 +64,42 @@ public class PostService {
                 postDto.getImage()
         );
 
+        post.setCreation_date(LocalDate.now());
+
         postRepository.save(post);
-        return true;
+        return Optional.of(post);
     }
 
     @Transactional
-    public boolean editPost(PostDTO postDto) throws Exception {
-        Optional<Post> post = this.postRepository.findById(postDto.getId());
-        if (post.isEmpty()){
+    public Optional<Post> editPost(PostDTO postDto, Long postId) throws Exception {
+        Optional<Post> post = this.postRepository.findById(postId);
+        Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
+        if (post.isEmpty()) {
             throw new Exception("Post not existing");
         }
+
+        if (!post.get().getAuthor().getEmail().equals(user.get().getEmail())) {
+            throw new Exception("Post not allowed to change");
+        }
+
         post.get().setTitle(postDto.getTitle());
         post.get().setContent(postDto.getContent());
         postRepository.save(post.get());
-        return true;
+        return post;
     }
 
     @Transactional
-    public boolean deletePost(Long postId) throws Exception {
+    public void deletePost(Long postId) throws Exception {
         Optional<Post> post = this.postRepository.findById(postId);
-        if (post.isEmpty()){
+        Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
+        if (post.isEmpty()) {
             throw new Exception("Post not existing");
         }
+
+        if (!post.get().getAuthor().getEmail().equals(user.get().getEmail())) {
+            throw new Exception("Post not allowed to change");
+        }
         postRepository.deleteById(postId);
-        return true;
     }
 
 }

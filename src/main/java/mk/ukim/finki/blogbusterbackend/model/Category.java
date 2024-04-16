@@ -31,5 +31,4 @@ public class Category {
         this.followers = new ArrayList<>();
     }
 
-
 }
