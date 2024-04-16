@@ -67,8 +67,8 @@ public class CommentService {
     }
 
     @Transactional
-    public Optional<Comment> editComment(CommentDTO commentDto, Long commentId) throws Exception {
-        Optional<Comment> comment = commentRepository.findById(commentId);
+    public boolean editComment(CommentDTO commentDto) throws Exception {
+        Optional<Comment> comment = commentRepository.findById(commentDto.getId());
         Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
 
         if (comment.isEmpty()) {
@@ -80,7 +80,7 @@ public class CommentService {
         }
         comment.get().setContent(commentDto.getContent());
         commentRepository.save(comment.get());
-        return comment;
+        return true;
     }
 
     @Transactional

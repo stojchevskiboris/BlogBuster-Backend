@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/api/comments")
 public class CommentRestController {
@@ -32,12 +33,12 @@ public class CommentRestController {
         return commentService.addComment(commentDto);
     }
 
-    @PutMapping("/edit/{commentId}")
-    public Optional<Comment> editComment(@RequestBody CommentDTO commentDto, @PathVariable Long commentId) throws Exception {
-        return commentService.editComment(commentDto, commentId);
+    @PutMapping("/edit")
+    public boolean editComment(@RequestBody CommentDTO commentDto) throws Exception {
+        return commentService.editComment(commentDto);
     }
 
-    @PostMapping("/deleteById/{commentId}")
+    @PostMapping("/delete/{commentId}")
     public String deleteComment(@PathVariable Long commentId) throws Exception {
         this.commentService.deleteComment(commentId);
         return "redirect:/api/comments";
