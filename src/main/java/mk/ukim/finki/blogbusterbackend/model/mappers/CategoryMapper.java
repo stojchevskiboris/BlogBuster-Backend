@@ -13,7 +13,9 @@ public class CategoryMapper {
     {
         return new CategoryDTO(
                 category.getId(),
-                category.getName());
+                category.getName(),
+                category.getFollowers(),
+                category.getPosts());
     }
     public static List<CategoryDTO> MapToListViewModel(List<Category> categories){
         List<CategoryDTO> categoryDTOS = new ArrayList<>();
