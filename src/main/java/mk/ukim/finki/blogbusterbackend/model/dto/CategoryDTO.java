@@ -14,10 +14,10 @@ public class CategoryDTO {
     private List<User> followers;
     private List<Post>posts;
 
-//    public CategoryDTO(Long id, String name) {
-//        this.id = id;
-//        this.name = name;
-//    }
+    public CategoryDTO(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
     public CategoryDTO(Long id, String name, List<User> followers, List<Post> posts) {
         this.id = id;
         this.name = name;

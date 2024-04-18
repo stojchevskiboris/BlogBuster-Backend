@@ -3,6 +3,9 @@ package mk.ukim.finki.blogbusterbackend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -14,6 +17,9 @@ public class Reply {
     private Long id;
 
     private String content;
+
+    @CreatedDate
+    private LocalDate reply_date;
 
     @ManyToOne
     private User author;
