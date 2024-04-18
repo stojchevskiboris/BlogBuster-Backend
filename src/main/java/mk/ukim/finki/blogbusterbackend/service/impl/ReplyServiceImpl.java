@@ -9,6 +9,7 @@ import mk.ukim.finki.blogbusterbackend.model.dto.ReplyDTO;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidCommentIdException;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidReplyIdException;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidUserIdException;
+import mk.ukim.finki.blogbusterbackend.model.mappers.ReplyMapper;
 import mk.ukim.finki.blogbusterbackend.repository.CommentRepository;
 import mk.ukim.finki.blogbusterbackend.repository.ReplyRepository;
 import mk.ukim.finki.blogbusterbackend.repository.UserRepository;
@@ -28,25 +29,26 @@ public class ReplyServiceImpl implements ReplyService {
     private final CommentRepository commentRepository;
 
     @Override
-    public List<Reply> getAllReplies() {
-        return this.replyRepository.findAll();
+    public List<ReplyDTO> getAllReplies() {
+        return ReplyMapper.MapToListViewModel(this.replyRepository.findAll());
     }
 
     @Override
-    public Reply getReplyById(Long replyId) {
-        return this.replyRepository.findById(replyId).orElseThrow(InvalidReplyIdException::new);
+    public ReplyDTO getReplyById(Long replyId) {
+        return ReplyMapper.MapToViewModel(this.replyRepository.findById(replyId).
+                orElseThrow(InvalidReplyIdException::new));
     }
 
     @Override
-    public List<Reply> getAllRepliesByAuthorId(Long userId) {
+    public List<ReplyDTO> getAllRepliesByAuthorId(Long userId) {
         User user=this.userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
-        return user.getReplies();
+        return ReplyMapper.MapToListViewModel(user.getReplies());
     }
 
     @Override
-    public List<Reply> getAllRepliesByCommentId(Long commentId) {
+    public List<ReplyDTO> getAllRepliesByCommentId(Long commentId) {
         Comment comment=this.commentRepository.findById(commentId).orElseThrow(InvalidCommentIdException::new);
-        return comment.getReplies();
+        return ReplyMapper.MapToListViewModel(comment.getReplies());
     }
 
     @Transactional
@@ -61,8 +63,9 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Transactional
     @Override
-    public Reply editReply(ReplyDTO replyDTO) throws Exception {
-        Reply reply=getReplyById(replyDTO.getId());
+    public Reply editReply(ReplyDTO replyDTO, Long replyId) throws Exception {
+        Reply reply=this.replyRepository.findById(replyId)
+                .orElseThrow(InvalidReplyIdException::new);
         User user=this.userRepository.findByEmail(UserUtils.getLoggedUserEmail()).orElseThrow(InvalidUserIdException::new);
         if (!reply.getAuthor().getEmail().equals(user.getEmail())) {
             throw new Exception("Reply not allowed to change");
@@ -74,7 +77,8 @@ public class ReplyServiceImpl implements ReplyService {
     @Transactional
     @Override
     public Reply deleteReply(Long replyId) throws Exception {
-        Reply reply=getReplyById(replyId);
+        Reply reply=this.replyRepository.findById(replyId)
+                .orElseThrow(InvalidReplyIdException::new);
         User user=userRepository.findByEmail(UserUtils.getLoggedUserEmail()).orElseThrow(InvalidUserIdException::new);
         if (!reply.getAuthor().getEmail().equals(user.getEmail())) {
             throw new Exception("Reply not allowed to change");

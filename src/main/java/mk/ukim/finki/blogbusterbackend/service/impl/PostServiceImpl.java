@@ -9,6 +9,7 @@ import mk.ukim.finki.blogbusterbackend.model.mappers.PostMapper;
 import mk.ukim.finki.blogbusterbackend.repository.CategoryRepository;
 import mk.ukim.finki.blogbusterbackend.repository.PostRepository;
 import mk.ukim.finki.blogbusterbackend.repository.UserRepository;
+import mk.ukim.finki.blogbusterbackend.service.PostService;
 import mk.ukim.finki.blogbusterbackend.utils.UserUtils;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +18,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PostService {
+public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;

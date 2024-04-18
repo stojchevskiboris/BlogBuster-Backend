@@ -10,6 +10,7 @@ import mk.ukim.finki.blogbusterbackend.model.mappers.CommentMapper;
 import mk.ukim.finki.blogbusterbackend.repository.CommentRepository;
 import mk.ukim.finki.blogbusterbackend.repository.PostRepository;
 import mk.ukim.finki.blogbusterbackend.repository.UserRepository;
+import mk.ukim.finki.blogbusterbackend.service.CommentService;
 import mk.ukim.finki.blogbusterbackend.utils.UserUtils;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CommentService {
+public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;

@@ -5,9 +5,12 @@ import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.blogbusterbackend.model.Category;
 import mk.ukim.finki.blogbusterbackend.model.Post;
 import mk.ukim.finki.blogbusterbackend.model.dto.CategoryDTO;
+import mk.ukim.finki.blogbusterbackend.model.dto.PostDTO;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidCategoryIdException;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidCategoryNameException;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidPostIdException;
+import mk.ukim.finki.blogbusterbackend.model.mappers.CategoryMapper;
+import mk.ukim.finki.blogbusterbackend.model.mappers.PostMapper;
 import mk.ukim.finki.blogbusterbackend.repository.CategoryRepository;
 import mk.ukim.finki.blogbusterbackend.repository.PostRepository;
 import mk.ukim.finki.blogbusterbackend.service.CategoryService;
@@ -23,23 +26,25 @@ public class CategoryServiceImpl implements CategoryService {
     private final PostRepository postRepository;
 
     @Override
-    public List<Category> getAllCategories() {
-        return this.categoryRepository.findAll();
+    public List<CategoryDTO> getAllCategories() {
+        return CategoryMapper.MapToListViewModel(this.categoryRepository.findAll());
     }
 
     @Override
-    public Category getCategoryById(Long id) {
-        return this.categoryRepository.findById(id).orElseThrow(InvalidCategoryIdException::new);
+    public CategoryDTO getCategoryById(Long id) {
+        return CategoryMapper.MapToViewModel(this.categoryRepository.findById(id).orElseThrow(InvalidCategoryIdException::new));
     }
 
     @Override
-    public List<Post> getPostsByCategoryId(Long id) {
-        return this.categoryRepository.findById(id).orElseThrow(InvalidCategoryIdException::new).getPosts();
+    public List<PostDTO> getPostsByCategoryId(Long id) {
+        return PostMapper.MapToListViewModel(this.categoryRepository.findById(id).
+                orElseThrow(InvalidCategoryIdException::new).getPosts());
     }
 
     @Override
-    public Category getCategoryByName(String name) {
-        return this.categoryRepository.findCategoryByName(name).orElseThrow(InvalidCategoryNameException::new);
+    public CategoryDTO getCategoryByName(String name) {
+        return CategoryMapper.MapToViewModel(this.categoryRepository.findCategoryByName(name).
+                orElseThrow(InvalidCategoryNameException::new));
     }
 
     @Transactional
@@ -51,8 +56,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public Category editCategory(CategoryDTO categoryDTO) {
-        Category category = getCategoryById(categoryDTO.getId());
+    public Category editCategory(CategoryDTO categoryDTO, Long categoryId) {
+        Category category =this.categoryRepository.findById(categoryId)
+                .orElseThrow(InvalidCategoryIdException::new);
         category.setName(categoryDTO.getName());
         category.setFollowers(categoryDTO.getFollowers());
         category.setPosts(categoryDTO.getPosts());
@@ -62,7 +68,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public Category deleteCategory(Long id) {
-        Category category = getCategoryById(id);
+        Category category =this.categoryRepository.findById(id)
+                .orElseThrow(InvalidCategoryIdException::new);
         this.categoryRepository.delete(category);
         return category;
     }
@@ -73,7 +80,8 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryId == null || postId == null) {
             throw new Exception("Category ID and Post ID must not be null");
         }
-        Category category = getCategoryById(categoryId);
+        Category category = this.categoryRepository.findById(categoryId)
+                .orElseThrow(InvalidCategoryIdException::new);
         Post post = this.postRepository.findById(postId).orElseThrow(InvalidPostIdException::new);
         if (!post.getCategory().equals(category)) {
             category.getPosts().add(post);
@@ -90,7 +98,8 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryId == null || postId == null) {
             throw new Exception("Category ID and Post ID must not be null");
         }
-        Category category = getCategoryById(categoryId);
+        Category category = this.categoryRepository.findById(categoryId)
+                .orElseThrow(InvalidCategoryIdException::new);
         Post post = this.postRepository.findById(postId).orElseThrow(InvalidPostIdException::new);
         if (post.getCategory().equals(category)) {
             post.setCategory(null);

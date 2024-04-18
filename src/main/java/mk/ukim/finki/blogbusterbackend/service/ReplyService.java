@@ -6,11 +6,11 @@ import mk.ukim.finki.blogbusterbackend.model.dto.ReplyDTO;
 import java.util.List;
 
 public interface ReplyService {
-    List<Reply> getAllReplies();
-    Reply getReplyById(Long replyId);
-    List<Reply> getAllRepliesByAuthorId(Long userId);
-    List<Reply> getAllRepliesByCommentId(Long commentId);
+    List<ReplyDTO> getAllReplies();
+    ReplyDTO getReplyById(Long replyId);
+    List<ReplyDTO> getAllRepliesByAuthorId(Long userId);
+    List<ReplyDTO> getAllRepliesByCommentId(Long commentId);
     Reply addReply(ReplyDTO replyDTO);
-    Reply editReply(ReplyDTO replyDTO) throws Exception;
+    Reply editReply(ReplyDTO replyDTO, Long replyId) throws Exception;
     Reply deleteReply(Long replyId) throws Exception;
 }
