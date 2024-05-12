@@ -1,8 +1,10 @@
 package mk.ukim.finki.blogbusterbackend.service;
 
 import mk.ukim.finki.blogbusterbackend.model.Post;
+import mk.ukim.finki.blogbusterbackend.model.dto.FilterDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.PostDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,4 +15,5 @@ public interface PostService {
     Optional<Post> addPost(PostDTO postDto) throws Exception;
     Optional<Post> editPost(PostDTO postDto, Long postId) throws Exception;
     void deletePost(Long postId) throws Exception;
+    List<Post> filterPosts(FilterDTO filterDTO);
 }
