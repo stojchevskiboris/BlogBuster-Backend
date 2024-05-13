@@ -70,6 +70,7 @@ public class PostServiceImpl implements PostService {
         );
 
         post.setCreation_date(LocalDate.now());
+        post.setModified_date(LocalDate.now());
 
         postRepository.save(post);
         return Optional.of(post);
@@ -89,6 +90,8 @@ public class PostServiceImpl implements PostService {
 
         post.get().setTitle(postDto.getTitle());
         post.get().setContent(postDto.getContent());
+        post.get().setIsModified(true);
+        post.get().setModified_date(LocalDate.now());
         postRepository.save(post.get());
         return post;
     }

@@ -33,6 +33,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Lob
+    @Column(name = "image")
+    private byte[] image;
+
     @Column(name = "replies")
     @OneToMany(mappedBy = "author")
     private List<Reply> replies;
@@ -53,7 +57,7 @@ public class User implements UserDetails {
 
 
 
-    public User(String firstName, String lastName, String email, String password) {
+    public User(String firstName, String lastName, String email, String password, byte[] image) {
         this.firstname = firstName;
         this.lastname = lastName;
         this.email = email;
@@ -63,7 +67,7 @@ public class User implements UserDetails {
         this.followingCategories = new ArrayList<>();
         this.likedPosts = new ArrayList<>();
         this.role = Role.ROLE_USER;
-
+        this.image = image;
     }
 
     public User(){}

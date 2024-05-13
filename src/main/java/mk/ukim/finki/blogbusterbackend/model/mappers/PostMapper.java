@@ -15,7 +15,10 @@ public class PostMapper {
                 post.getContent(),
                 post.getAuthor().getUsername(),
                 post.getCategory().getName(),
-                post.getImage()
+                post.getImage(),
+                post.getCreation_date(),
+                post.getModified_date(),
+                post.getIsModified()
         );
     }
     public static List<PostDTO> MapToListViewModel(List<Post> posts){
