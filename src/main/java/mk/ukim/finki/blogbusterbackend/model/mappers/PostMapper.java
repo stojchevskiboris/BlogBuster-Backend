@@ -14,7 +14,7 @@ public class PostMapper {
                 post.getTitle(),
                 post.getContent(),
                 post.getAuthor().getUsername(),
-                post.getCategory().getName(),
+                post.getCategory() !=null ? post.getCategory().getName() : null,
                 post.getImage(),
                 post.getCreation_date(),
                 post.getModified_date(),

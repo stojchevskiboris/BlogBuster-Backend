@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.blogbusterbackend.model.dto.CommentDTO;
 import org.springframework.data.annotation.CreatedDate;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class Comment {
     private String content;
 
     @CreatedDate
-    private LocalDate comment_date;
+    private LocalDateTime comment_date;
 
     @ManyToOne
     private User author;

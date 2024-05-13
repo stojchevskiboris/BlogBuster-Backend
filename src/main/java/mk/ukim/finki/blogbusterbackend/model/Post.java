@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -25,10 +25,10 @@ public class Post {
     private String content;
 
     @CreatedDate
-    private LocalDate creation_date;
+    private LocalDateTime creation_date;
 
     @LastModifiedDate
-    private LocalDate modified_date;
+    private LocalDateTime modified_date;
 
     private Boolean isModified;
 
