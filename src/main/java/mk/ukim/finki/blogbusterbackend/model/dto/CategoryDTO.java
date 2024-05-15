@@ -19,6 +19,7 @@ public class CategoryDTO {
         this.id = id;
         this.name = name;
     }
+    public CategoryDTO() { }
     public CategoryDTO(Long id, @NonNull String name, List<User> followers, List<Post> posts) {
         this.id = id;
         this.name = name;
