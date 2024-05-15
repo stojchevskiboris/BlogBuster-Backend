@@ -97,4 +97,11 @@ public class CommentServiceImpl implements CommentService {
         }
         commentRepository.deleteById(commentId);
     }
+
+    @Override
+    public int totalRepliesOfComment(Long commentId) throws Exception {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new Exception("Comment not found"));
+        return comment.getReplies().size();
+    }
 }

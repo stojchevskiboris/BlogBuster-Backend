@@ -41,4 +41,9 @@ public class CommentRestController {
         this.commentService.deleteComment(commentId);
         return "redirect:/api/comments";
     }
+
+    @GetMapping("/totalReplies/{commentId}")
+    public int getTotalRepliesOfComment(@PathVariable Long commentId) throws Exception {
+        return this.commentService.totalRepliesOfComment(commentId);
+    }
 }

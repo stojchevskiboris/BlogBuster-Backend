@@ -8,6 +8,19 @@ import java.util.List;
 
 
 public interface UserService {
-    UserDetailsService userDetailsService();
     List<UserDTO> discoverPeople(Long userId);
+
+    UserDetailsService userDetailsService();
+
+    void followUser(Long followerId, Long followeeId);
+
+    void unfollowUser(Long loggedInUserId, Long followeeId);
+
+    void followCategory(Long loggedInUserId, Long categoryId);
+
+    void unfollowCategory(Long loggedInUserId, Long categoryId);
+
+
+    Long getUserIdByEmail(String email);
+
 }

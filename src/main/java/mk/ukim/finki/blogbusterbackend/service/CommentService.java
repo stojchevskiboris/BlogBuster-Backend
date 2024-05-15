@@ -13,4 +13,6 @@ public interface CommentService {
     boolean addComment(CommentDTO commentDto) throws Exception;
     boolean editComment(CommentDTO commentDto) throws Exception;
     void deleteComment(Long commentId) throws Exception;
+
+    int totalRepliesOfComment(Long commentId) throws Exception;
 }
