@@ -42,4 +42,10 @@ public class PostRestController {
         this.postService.deletePost(postId);
         return true;
     }
+
+
+    @GetMapping("/totalLikes/{postId}")
+    public int getTotalLikesOfPost(@PathVariable Long postId) throws Exception {
+        return this.postService.totalLikesOfPost(postId);
+    }
 }

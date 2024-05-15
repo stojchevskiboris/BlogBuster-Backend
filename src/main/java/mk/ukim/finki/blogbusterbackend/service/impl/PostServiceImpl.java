@@ -132,4 +132,17 @@ public class PostServiceImpl implements PostService {
                         convertDateToString(p.getCreation_date()).contains(filterDTO.getContext()))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public int totalLikesOfPost(Long postId) throws Exception {
+        Optional<Post> postOptional = postRepository.findById(postId);
+        if (postOptional.isPresent()) {
+            Post post = postOptional.get();
+            return post.getLikedByUsers().size();
+        } else {
+            throw new Exception("Post not existing");
+        }
+    }
+
+
 }
