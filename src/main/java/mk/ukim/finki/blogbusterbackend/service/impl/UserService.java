@@ -42,6 +42,7 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
         List<User> nonFollowers = userRepository.findAll().stream().
                 filter(user -> !user.equals(currentUser))
                 .filter(user -> !user.getFollowingUsers().contains(currentUser))
+                .sorted((u1,u2)->Integer.compare(u1.getFollowingUsers().size(),u2.getFollowingUsers().size()))
                 .limit(10)
                 .collect(Collectors.toList());
         return UserMapper.MapToListViewModel(nonFollowers);

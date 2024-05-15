@@ -19,6 +19,7 @@ import mk.ukim.finki.blogbusterbackend.repository.UserRepository;
 import mk.ukim.finki.blogbusterbackend.service.CategoryService;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -119,6 +120,7 @@ public class CategoryServiceImpl implements CategoryService {
         User currentUser=userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
         List<Category>categories=this.categoryRepository.findAll().stream()
                 .filter(cat->!cat.getFollowers().contains(currentUser))
+                .sorted((c1,c2)->Integer.compare(c1.getFollowers().size(),c2.getFollowers().size()))
                 .limit(10)
                 .collect(Collectors.toList());
         return CategoryMapper.MapToListViewModel(categories);
