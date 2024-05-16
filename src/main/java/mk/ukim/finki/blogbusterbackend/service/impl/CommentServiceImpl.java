@@ -14,7 +14,7 @@ import mk.ukim.finki.blogbusterbackend.service.CommentService;
 import mk.ukim.finki.blogbusterbackend.utils.UserUtils;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,7 +62,7 @@ public class CommentServiceImpl implements CommentService {
                 post.get()
         );
 
-        comment.setComment_date(LocalDate.now());
+        comment.setComment_date(LocalDateTime.now());
         commentRepository.save(comment);
         return true;
     }

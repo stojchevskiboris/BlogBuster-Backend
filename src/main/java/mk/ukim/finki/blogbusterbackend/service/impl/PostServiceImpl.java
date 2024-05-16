@@ -15,7 +15,7 @@ import mk.ukim.finki.blogbusterbackend.utils.UserUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
@@ -77,7 +77,8 @@ public class PostServiceImpl implements PostService {
 
         );
 
-        post.setCreation_date(LocalDate.now());
+        post.setCreation_date(LocalDateTime.now());
+        post.setModified_date(LocalDateTime.now());
 
         postRepository.save(post);
         return Optional.of(post);
@@ -97,6 +98,8 @@ public class PostServiceImpl implements PostService {
 
         post.get().setTitle(postDto.getTitle());
         post.get().setContent(postDto.getContent());
+        post.get().setIsModified(true);
+        post.get().setModified_date(LocalDateTime.now());
         postRepository.save(post.get());
         return post;
     }
@@ -116,7 +119,7 @@ public class PostServiceImpl implements PostService {
     }
 
     //method for converting Date object to String ---> used for the search part
-    public String convertDateToString(LocalDate creationDate)
+    public String convertDateToString(LocalDateTime creationDate)
     {
         DateTimeFormatter dateTimeFormat=DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return dateTimeFormat.format(creationDate);

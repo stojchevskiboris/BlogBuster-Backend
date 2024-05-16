@@ -17,7 +17,7 @@ import mk.ukim.finki.blogbusterbackend.service.ReplyService;
 import mk.ukim.finki.blogbusterbackend.utils.UserUtils;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -57,7 +57,7 @@ public class ReplyServiceImpl implements ReplyService {
         Comment comment=this.commentRepository.findById(replyDTO.getCommentId()).orElseThrow(InvalidCommentIdException::new);
         User user=this.userRepository.findByEmail(UserUtils.getLoggedUserEmail()).orElseThrow(InvalidUserIdException::new);
         Reply reply=new Reply(replyDTO.getContent(),user,comment);
-        reply.setReply_date(LocalDate.now());
+        reply.setReply_date(LocalDateTime.now());
         return this.replyRepository.save(reply);
     }
 

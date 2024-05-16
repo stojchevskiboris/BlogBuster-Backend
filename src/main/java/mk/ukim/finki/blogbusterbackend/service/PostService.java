@@ -4,7 +4,6 @@ import mk.ukim.finki.blogbusterbackend.model.Post;
 import mk.ukim.finki.blogbusterbackend.model.dto.FilterDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.PostDTO;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 

@@ -4,6 +4,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.blogbusterbackend.model.Category;
 import mk.ukim.finki.blogbusterbackend.model.User;
+import mk.ukim.finki.blogbusterbackend.model.dto.UserDTO;
+import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidUserIdException;
+import mk.ukim.finki.blogbusterbackend.model.mappers.UserMapper;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidCategoryIdException;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.UserNotFoundException;
 import mk.ukim.finki.blogbusterbackend.repository.CategoryRepository;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +43,17 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
         };
 
     }
-
+    @Override
+    public List<UserDTO> discoverPeople(Long userId) {
+        User currentUser = userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
+        List<User> nonFollowers = userRepository.findAll().stream().
+                filter(user -> !user.equals(currentUser))
+                .filter(user -> !user.getFollowingUsers().contains(currentUser))
+                .sorted((u1,u2)->Integer.compare(u1.getFollowingUsers().size(),u2.getFollowingUsers().size()))
+                .limit(10)
+                .collect(Collectors.toList());
+        return UserMapper.MapToListViewModel(nonFollowers);
+    }
 
     @Override
     @Transactional

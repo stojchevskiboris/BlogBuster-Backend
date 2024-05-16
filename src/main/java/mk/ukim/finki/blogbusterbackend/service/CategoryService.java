@@ -18,4 +18,5 @@ public interface CategoryService {
     Category deleteCategory(Long id);
     Category addPostToCategory(Long categoryId, Long postId) throws Exception;
     Category removePostFromCategory(Long categoryId, Long postId) throws Exception;
+    List<CategoryDTO>discoverCategories(Long userId);
 }

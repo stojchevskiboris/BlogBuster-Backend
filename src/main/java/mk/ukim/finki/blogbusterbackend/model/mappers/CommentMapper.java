@@ -12,7 +12,8 @@ public class CommentMapper {
                 comment.getId(),
                 comment.getContent(),
                 comment.getAuthor().getUsername(),
-                comment.getPost().getId()
+                comment.getPost().getId(),
+                comment.getComment_date()
         );
     }
 

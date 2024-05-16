@@ -4,19 +4,24 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.blogbusterbackend.model.Category;
 import mk.ukim.finki.blogbusterbackend.model.Post;
+import mk.ukim.finki.blogbusterbackend.model.User;
 import mk.ukim.finki.blogbusterbackend.model.dto.CategoryDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.PostDTO;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidCategoryIdException;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidCategoryNameException;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidPostIdException;
+import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidUserIdException;
 import mk.ukim.finki.blogbusterbackend.model.mappers.CategoryMapper;
 import mk.ukim.finki.blogbusterbackend.model.mappers.PostMapper;
 import mk.ukim.finki.blogbusterbackend.repository.CategoryRepository;
 import mk.ukim.finki.blogbusterbackend.repository.PostRepository;
+import mk.ukim.finki.blogbusterbackend.repository.UserRepository;
 import mk.ukim.finki.blogbusterbackend.service.CategoryService;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<CategoryDTO> getAllCategories() {
@@ -108,5 +114,15 @@ public class CategoryServiceImpl implements CategoryService {
             this.postRepository.save(post);
         }
         return category;
+    }
+    @Override
+    public List<CategoryDTO> discoverCategories(Long userId) {
+        User currentUser=userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
+        List<Category>categories=this.categoryRepository.findAll().stream()
+                .filter(cat->!cat.getFollowers().contains(currentUser))
+                .sorted((c1,c2)->Integer.compare(c1.getFollowers().size(),c2.getFollowers().size()))
+                .limit(10)
+                .collect(Collectors.toList());
+        return CategoryMapper.MapToListViewModel(categories);
     }
 }

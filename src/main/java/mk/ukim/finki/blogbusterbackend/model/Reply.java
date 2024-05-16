@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -19,7 +19,7 @@ public class Reply {
     private String content;
 
     @CreatedDate
-    private LocalDate reply_date;
+    private LocalDateTime reply_date;
 
     @ManyToOne
     private User author;

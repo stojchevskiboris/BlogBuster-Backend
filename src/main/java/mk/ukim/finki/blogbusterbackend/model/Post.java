@@ -4,8 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -24,8 +25,12 @@ public class Post {
     private String content;
 
     @CreatedDate
-    private LocalDate creation_date;
+    private LocalDateTime creation_date;
 
+    @LastModifiedDate
+    private LocalDateTime modified_date;
+
+    private Boolean isModified;
 
     @ManyToOne
     private User author;
@@ -40,7 +45,7 @@ public class Post {
     private List<User> likedByUsers;
 
     @Lob
-    @Column(name = "image", columnDefinition="BLOB")
+    @Column(name = "image")
     private byte[] image;
 
 
@@ -52,6 +57,7 @@ public class Post {
         this.comments = new ArrayList<>();
         this.likedByUsers = new ArrayList<>();
         this.image = image;
+        this.isModified = false;
     }
 
 

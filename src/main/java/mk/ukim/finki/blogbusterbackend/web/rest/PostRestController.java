@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
+@CrossOrigin(origins = "http://localhost:3000")
 public class PostRestController {
     private final PostService postService;
 
@@ -27,21 +27,21 @@ public class PostRestController {
     }
 
     @PostMapping("/add")
-    public String addPost(@RequestBody PostDTO postDto) throws Exception {
+    public boolean addPost(@ModelAttribute PostDTO postDto) throws Exception {
         this.postService.addPost(postDto);
-        return "redirect:/api/posts";
+        return true;
     }
 
     @PostMapping("/edit/{postId}")
-    public String editPost(@RequestBody PostDTO postDTO, @PathVariable Long postId) throws Exception {
+    public boolean editPost(@RequestBody PostDTO postDTO, @PathVariable Long postId) throws Exception {
         this.postService.editPost(postDTO,postId);
-        return "redirect:/api/posts";
+        return true;
     }
 
     @PostMapping("/delete/{postId}")
-    public String deletePost(@PathVariable Long postId) throws Exception {
+    public boolean deletePost(@PathVariable Long postId) throws Exception {
         this.postService.deletePost(postId);
-        return "redirect:/api/posts";
+        return true;
     }
 
 
