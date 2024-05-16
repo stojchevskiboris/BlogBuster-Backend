@@ -3,12 +3,14 @@ package mk.ukim.finki.blogbusterbackend.web.rest;
 import mk.ukim.finki.blogbusterbackend.model.dto.CommentDTO;
 import mk.ukim.finki.blogbusterbackend.service.impl.CommentServiceImpl;
 import org.springframework.web.bind.annotation.*;
+//import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/api/comments")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class CommentRestController {
     private final CommentServiceImpl commentService;
 

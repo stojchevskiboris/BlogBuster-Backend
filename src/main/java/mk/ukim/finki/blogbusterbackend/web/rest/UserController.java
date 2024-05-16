@@ -1,16 +1,18 @@
 package mk.ukim.finki.blogbusterbackend.web.rest;
 
+import mk.ukim.finki.blogbusterbackend.model.User;
+import mk.ukim.finki.blogbusterbackend.model.dto.ReplyDTO;
 import mk.ukim.finki.blogbusterbackend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class UserController {
 
     private final UserService userService;
@@ -75,6 +77,12 @@ public class UserController {
         userService.unfollowCategory(loggedInUserId, categoryId);
 
         return ResponseEntity.ok("Category successfully unfollowed.");
+    }
+
+
+    @GetMapping("/test")
+    public String testConnection() {
+        return "Backend connection successful!";
     }
 
 

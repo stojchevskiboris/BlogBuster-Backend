@@ -1,7 +1,9 @@
 package mk.ukim.finki.blogbusterbackend.service;
 
+import mk.ukim.finki.blogbusterbackend.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.List;
 
 
 public interface UserService {

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,12 +62,19 @@ public class PostServiceImpl implements PostService {
         } else {
             category = categoryRepository.findCategoryByName(postDto.getCategoryName());
         }
+
+        //byte[] imageBytes = Base64.getDecoder().decode(postDto.getImage());
+
+
+
         Post post = new Post(
                 postDto.getTitle(),
                 postDto.getContent(),
                 user.get(),
                 category.orElse(null),
                 postDto.getImage()
+                //imageBytes
+
         );
 
         post.setCreation_date(LocalDate.now());
