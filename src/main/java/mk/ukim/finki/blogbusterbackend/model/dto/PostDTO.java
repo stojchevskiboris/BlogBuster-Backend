@@ -19,7 +19,7 @@ public class PostDTO {
     private boolean isModified;
 
 
-    public PostDTO(Long id, @NonNull String title, @NonNull String content, @NonNull String authorUsername, String categoryName, byte[] image, LocalDateTime creation_date, LocalDateTime modified_date, boolean isModified) {
+    public PostDTO(Long id,  String title,  String content,  String authorUsername, String categoryName, byte[] image, LocalDateTime creation_date, LocalDateTime modified_date, boolean isModified) {
         this.id = id;
         this.title = title;
         this.content = content;

@@ -27,7 +27,7 @@ public class PostRestController {
     }
 
     @PostMapping("/add")
-    public boolean addPost(@ModelAttribute PostDTO postDto) throws Exception {
+    public boolean addPost(@RequestBody PostDTO postDto) throws Exception {
         this.postService.addPost(postDto);
         return true;
     }
