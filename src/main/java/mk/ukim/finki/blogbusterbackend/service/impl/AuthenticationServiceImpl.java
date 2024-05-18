@@ -41,13 +41,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 
 
-        if (signUpRequest.getImage() != null) {
-            String fileName = StringUtils.cleanPath(signUpRequest.getImage().getOriginalFilename());
-            try {
-                user.setImage(signUpRequest.getImage().getBytes());
-            } catch (IOException e) {
-            }
-        }
+//        if (signUpRequest.getImage() != null) {
+//            String fileName = StringUtils.cleanPath(signUpRequest.getImage().getOriginalFilename());
+//            try {
+//                user.setImage(signUpRequest.getImage().getBytes());
+//            } catch (IOException e) {
+//            }
+//        }
 
         return userRepository.save(user);
 

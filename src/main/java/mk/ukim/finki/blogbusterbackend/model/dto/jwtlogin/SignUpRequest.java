@@ -15,6 +15,6 @@ public class SignUpRequest {
 
     private String password;
 
-    private MultipartFile image;
+    //private MultipartFile image;
 
 }

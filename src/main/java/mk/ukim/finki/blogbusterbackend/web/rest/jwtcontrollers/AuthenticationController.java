@@ -23,17 +23,13 @@ public class AuthenticationController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@RequestParam String firstname,
-                                       @RequestParam String lastname,
-                                       @RequestParam String email,
-                                       @RequestParam String password,
-                                       @RequestParam("image") MultipartFile image) {
-        SignUpRequest signUpRequest = new SignUpRequest();
-        signUpRequest.setFirstname(firstname);
-        signUpRequest.setLastname(lastname);
-        signUpRequest.setEmail(email);
-        signUpRequest.setPassword(password);
-        signUpRequest.setImage(image);
+    public ResponseEntity<User> signup(@RequestBody SignUpRequest signUpRequest) {
+        //SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setFirstname(signUpRequest.getFirstname());
+        signUpRequest.setLastname(signUpRequest.getLastname());
+        signUpRequest.setEmail(signUpRequest.getEmail());
+        signUpRequest.setPassword(signUpRequest.getPassword());
+        //signUpRequest.setImage(image);
 
         return ResponseEntity.ok(authenticationService.signup(signUpRequest));
     }
