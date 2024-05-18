@@ -9,6 +9,7 @@ import mk.ukim.finki.blogbusterbackend.model.dto.jwtlogin.SignUpRequest;
 import mk.ukim.finki.blogbusterbackend.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -22,7 +23,18 @@ public class AuthenticationController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<User> signup(@RequestParam String firstname,
+                                       @RequestParam String lastname,
+                                       @RequestParam String email,
+                                       @RequestParam String password,
+                                       @RequestParam("image") MultipartFile image) {
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setFirstname(firstname);
+        signUpRequest.setLastname(lastname);
+        signUpRequest.setEmail(email);
+        signUpRequest.setPassword(password);
+        signUpRequest.setImage(image);
+
         return ResponseEntity.ok(authenticationService.signup(signUpRequest));
     }
 

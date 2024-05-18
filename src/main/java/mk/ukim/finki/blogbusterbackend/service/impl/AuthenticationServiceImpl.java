@@ -14,7 +14,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 @Service
@@ -37,7 +39,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setRole(Role.ROLE_USER);
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
 
+
+
+        if (signUpRequest.getImage() != null) {
+            String fileName = StringUtils.cleanPath(signUpRequest.getImage().getOriginalFilename());
+            try {
+                user.setImage(signUpRequest.getImage().getBytes());
+            } catch (IOException e) {
+            }
+        }
+
         return userRepository.save(user);
+
+
+
     }
 
     public JwtAuthenticationResponse signin(SignInRequest signInRequest) {
