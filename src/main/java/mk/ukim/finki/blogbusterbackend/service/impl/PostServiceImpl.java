@@ -52,29 +52,24 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     public Optional<Post> addPost(PostDTO postDto) throws Exception {
-        Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
-        if (user.isEmpty()) {
+        Optional<User> userOptional = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
+        if (userOptional.isEmpty()) {
             throw new Exception("User not existing");
         }
-        Optional<Category> category;
-        if (postDto.getCategoryName() == null || postDto.getCategoryName().isEmpty()) {
-            category = Optional.empty();
-        } else {
-            category = categoryRepository.findCategoryByName(postDto.getCategoryName());
-        }
+        User user = userOptional.get();
 
-        //byte[] imageBytes = Base64.getDecoder().decode(postDto.getImage());
+        Optional<Category> categoryOptional = (postDto.getCategoryName() == null || postDto.getCategoryName().isEmpty())
+                ? Optional.empty()
+                : categoryRepository.findCategoryByName(postDto.getCategoryName());
 
-
+        Category category = categoryOptional.orElse(null);
 
         Post post = new Post(
                 postDto.getTitle(),
                 postDto.getContent(),
-                user.get(),
-                category.orElse(null),
+                user,
+                category,
                 postDto.getImage()
-                //imageBytes
-
         );
 
         post.setCreation_date(LocalDateTime.now());

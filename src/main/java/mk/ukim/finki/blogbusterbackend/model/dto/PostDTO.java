@@ -18,12 +18,19 @@ public class PostDTO {
     private LocalDateTime modified_date;
     private boolean isModified;
 
+    private String firstname;
+    private String lastname;
 
-    public PostDTO(Long id,  String title,  String content,  String authorUsername, String categoryName, byte[] image, LocalDateTime creation_date, LocalDateTime modified_date, boolean isModified) {
+
+    public PostDTO(Long id,  String title,  String content,  String authorUsername, String firstname, String lastname,
+                   String categoryName, byte[] image, LocalDateTime creation_date, LocalDateTime modified_date,
+                   boolean isModified) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.authorUsername = authorUsername;
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.categoryName = categoryName;
         this.image = image;
         this.creation_date = creation_date;

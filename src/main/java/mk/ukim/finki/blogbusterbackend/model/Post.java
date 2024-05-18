@@ -49,6 +49,8 @@ public class Post {
     private byte[] image;
 
 
+
+
     public Post(String title, String content, User author, Category category, byte[] image) {
         this.title = title;
         this.content = content;
