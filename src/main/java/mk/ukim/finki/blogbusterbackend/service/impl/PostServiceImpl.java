@@ -6,6 +6,7 @@ import mk.ukim.finki.blogbusterbackend.model.Post;
 import mk.ukim.finki.blogbusterbackend.model.User;
 import mk.ukim.finki.blogbusterbackend.model.dto.FilterDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.PostDTO;
+import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidUserIdException;
 import mk.ukim.finki.blogbusterbackend.model.mappers.PostMapper;
 import mk.ukim.finki.blogbusterbackend.repository.CategoryRepository;
 import mk.ukim.finki.blogbusterbackend.repository.PostRepository;
@@ -145,6 +146,17 @@ public class PostServiceImpl implements PostService {
         } else {
             throw new Exception("Post not existing");
         }
+    }
+
+    @Override
+    public List<PostDTO> getPostsByFollowedUsers(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
+        List<User> followingUsers = user.getFollowingUsers();
+        List<Post> postsOfFollowingUsers = followingUsers.stream()
+                .flatMap(followingUser -> postRepository.findPostsByAuthorId(followingUser.getId()).stream())
+                .collect(Collectors.toList());
+
+        return PostMapper.MapToListViewModel(postsOfFollowingUsers);
     }
 
 

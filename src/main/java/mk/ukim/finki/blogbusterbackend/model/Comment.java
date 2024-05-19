@@ -32,7 +32,7 @@ public class Comment {
     @ManyToOne
     private Post post;
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies;
 
 

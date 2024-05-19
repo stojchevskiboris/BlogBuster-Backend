@@ -15,6 +15,7 @@ public interface PostService {
     Optional<Post> editPost(PostDTO postDto, Long postId) throws Exception;
     void deletePost(Long postId) throws Exception;
     List<Post> filterPosts(FilterDTO filterDTO);
+    List<PostDTO> getPostsByFollowedUsers(Long userId);
 
 
     int totalLikesOfPost(Long postId) throws Exception;

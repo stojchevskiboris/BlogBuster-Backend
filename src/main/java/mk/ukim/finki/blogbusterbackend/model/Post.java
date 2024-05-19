@@ -38,14 +38,14 @@ public class Post {
     @ManyToOne
     private Category category;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    @ManyToMany(mappedBy = "likedPosts")
+    @ManyToMany(mappedBy = "likedPosts", cascade = CascadeType.ALL)
     private List<User> likedByUsers;
 
     @Lob
-    @Column(name = "image")
+    @Column(name = "image", nullable = true)
     private byte[] image;
 
 

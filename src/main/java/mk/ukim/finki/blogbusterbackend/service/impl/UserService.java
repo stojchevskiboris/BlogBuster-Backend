@@ -3,13 +3,16 @@ package mk.ukim.finki.blogbusterbackend.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.blogbusterbackend.model.Category;
+import mk.ukim.finki.blogbusterbackend.model.Post;
 import mk.ukim.finki.blogbusterbackend.model.User;
 import mk.ukim.finki.blogbusterbackend.model.dto.UserDTO;
+import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidPostIdException;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidUserIdException;
 import mk.ukim.finki.blogbusterbackend.model.mappers.UserMapper;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidCategoryIdException;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.UserNotFoundException;
 import mk.ukim.finki.blogbusterbackend.repository.CategoryRepository;
+import mk.ukim.finki.blogbusterbackend.repository.PostRepository;
 import mk.ukim.finki.blogbusterbackend.repository.UserRepository;
 
 
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
 public class UserService implements mk.ukim.finki.blogbusterbackend.service.UserService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final PostRepository postRepository;
 
 
     @Override
@@ -119,6 +123,47 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
         }
 
 
+    }
+
+    @Override
+    public Boolean likePost(Long loggedInUserId, Long postId) {
+        User loggedInUser = userRepository.findById(loggedInUserId)
+                .orElseThrow(() -> new UserNotFoundException("Logged-in user not found with id: " + loggedInUserId));
+
+        Optional<Post> postOptional = postRepository.findById(postId);
+        if (postOptional.isEmpty()) {
+            throw new InvalidPostIdException();
+        }
+
+        Post post = postOptional.get();
+
+        List<Post> likedPosts = loggedInUser.getLikedPosts();
+        if (!likedPosts.contains(post)) {
+            likedPosts.add(post);
+            userRepository.save(loggedInUser);
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean unlikePost(Long loggedInUserId, Long postId) {
+        User loggedInUser = userRepository.findById(loggedInUserId)
+                .orElseThrow(() -> new UserNotFoundException("Logged-in user not found with id: " + loggedInUserId));
+
+        Optional<Post> postOptional = postRepository.findById(postId);
+        if (postOptional.isEmpty()) {
+            throw new InvalidPostIdException();
+        }
+
+        Post post = postOptional.get();
+
+        List<Post> likedPosts = loggedInUser.getLikedPosts();
+        if (likedPosts.contains(post)) {
+            likedPosts.remove(post);
+            loggedInUser.setLikedPosts(likedPosts);
+            userRepository.save(loggedInUser);
+        }
+        return true;
     }
 
     @Override

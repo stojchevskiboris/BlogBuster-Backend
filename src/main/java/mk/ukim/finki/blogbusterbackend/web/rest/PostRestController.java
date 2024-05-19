@@ -1,7 +1,10 @@
 package mk.ukim.finki.blogbusterbackend.web.rest;
 
+import mk.ukim.finki.blogbusterbackend.model.User;
 import mk.ukim.finki.blogbusterbackend.model.dto.PostDTO;
 import mk.ukim.finki.blogbusterbackend.service.PostService;
+import mk.ukim.finki.blogbusterbackend.service.UserService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,9 +14,13 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 public class PostRestController {
     private final PostService postService;
+    private final UserService userService;
 
-    public PostRestController(PostService postService) {
+
+    public PostRestController(PostService postService, UserService userService) {
         this.postService = postService;
+        this.userService = userService;
+
     }
 
     @GetMapping(value = {"","/", "/list"})
@@ -48,5 +55,24 @@ public class PostRestController {
     @GetMapping("/totalLikes/{postId}")
     public int getTotalLikesOfPost(@PathVariable Long postId) throws Exception {
         return this.postService.totalLikesOfPost(postId);
+    }
+
+    @GetMapping("/followingPosts")
+    public List<PostDTO> followingPosts(@RequestBody Long userId){
+        return this.postService.getPostsByFollowedUsers(userId);
+    }
+
+    @PostMapping("likePost/{postId}")
+    public boolean likePost(@PathVariable Long postId){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long loggedInUserId = userService.getUserIdByEmail(userEmail);
+        return userService.likePost(loggedInUserId, postId);
+    }
+
+    @PostMapping("unlikePost/{postId}")
+    public boolean unlikePost(@PathVariable Long postId){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long loggedInUserId = userService.getUserIdByEmail(userEmail);
+        return userService.unlikePost(loggedInUserId, postId);
     }
 }

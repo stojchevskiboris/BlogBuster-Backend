@@ -20,6 +20,9 @@ public interface UserService {
 
     void unfollowCategory(Long loggedInUserId, Long categoryId);
 
+    Boolean likePost(Long loggedInUserId, Long postId);
+
+    Boolean unlikePost(Long loggedInUserId, Long postId);
 
     Long getUserIdByEmail(String email);
 
