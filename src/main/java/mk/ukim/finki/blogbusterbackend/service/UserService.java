@@ -26,4 +26,5 @@ public interface UserService {
 
     Long getUserIdByEmail(String email);
 
+    List<UserDTO> getFollowers(Long userId);
 }

@@ -10,7 +10,7 @@ public class ReplyDTO {
     private String authorUsername;
     private Long commentId;
 
-    public ReplyDTO(Long id, @NonNull String content, @NonNull String authorUsername, @NonNull Long commentId) {
+    public ReplyDTO(Long id, @NonNull String content,  String authorUsername, @NonNull Long commentId) {
         this.id = id;
         this.content = content;
         this.authorUsername = authorUsername;
