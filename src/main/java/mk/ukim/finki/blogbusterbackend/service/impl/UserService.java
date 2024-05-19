@@ -149,7 +149,11 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
         return user.getId();
     }
 
-
+    @Override
+    public List<UserDTO> getFollowers(Long userId) {
+        User user=this.userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
+        return UserMapper.MapToListViewModel(user.getFollowingUsers());
+    }
 
 
 }

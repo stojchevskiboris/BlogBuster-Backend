@@ -2,6 +2,7 @@ package mk.ukim.finki.blogbusterbackend.web.rest;
 
 import mk.ukim.finki.blogbusterbackend.model.User;
 import mk.ukim.finki.blogbusterbackend.model.dto.ReplyDTO;
+import mk.ukim.finki.blogbusterbackend.model.dto.UserDTO;
 import mk.ukim.finki.blogbusterbackend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,6 +87,11 @@ public class UserController {
         return "Backend connection successful!";
     }
 
+    @GetMapping("/following/{id}")
+    public List<UserDTO> getFollowers(@PathVariable Long id)
+    {
+        return this.userService.getFollowers(id);
+    }
 
 }
 

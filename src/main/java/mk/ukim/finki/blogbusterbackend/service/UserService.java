@@ -20,7 +20,8 @@ public interface UserService {
 
     void unfollowCategory(Long loggedInUserId, Long categoryId);
 
-
     Long getUserIdByEmail(String email);
+
+    List<UserDTO> getFollowers(Long userId);
 
 }
