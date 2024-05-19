@@ -75,4 +75,11 @@ public class PostRestController {
         Long loggedInUserId = userService.getUserIdByEmail(userEmail);
         return userService.unlikePost(loggedInUserId, postId);
     }
+
+    @GetMapping("getLikedPosts")
+    public List<Long> getLikedPosts(){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long loggedInUserId = userService.getUserIdByEmail(userEmail);
+        return userService.getLikedPosts(loggedInUserId);
+    }
 }

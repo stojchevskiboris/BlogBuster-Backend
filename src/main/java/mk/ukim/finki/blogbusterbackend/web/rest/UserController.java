@@ -93,5 +93,9 @@ public class UserController {
         return this.userService.getFollowers(id);
     }
 
+    @GetMapping("/details")
+    public UserDTO details(){
+        return this.userService.getUserDetails();
+    }
 }
 

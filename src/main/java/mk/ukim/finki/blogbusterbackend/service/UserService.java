@@ -27,4 +27,8 @@ public interface UserService {
     Long getUserIdByEmail(String email);
 
     List<UserDTO> getFollowers(Long userId);
+
+    List<Long> getLikedPosts(Long userId);
+
+    UserDTO getUserDetails();
 }

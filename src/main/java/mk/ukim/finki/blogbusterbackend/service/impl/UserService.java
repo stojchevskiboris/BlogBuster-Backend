@@ -16,6 +16,7 @@ import mk.ukim.finki.blogbusterbackend.repository.PostRepository;
 import mk.ukim.finki.blogbusterbackend.repository.UserRepository;
 
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -198,6 +199,21 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
     public List<UserDTO> getFollowers(Long userId) {
         User user=this.userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
         return UserMapper.MapToListViewModel(user.getFollowingUsers());
+    }
+    @Override
+    public List<Long> getLikedPosts(Long userId) {
+        User user=this.userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
+        return user.getLikedPosts()
+                .stream()
+                .map(Post::getId)
+                .collect(Collectors.toList());
+    }
+
+    public UserDTO getUserDetails(){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long loggedInUserId = getUserIdByEmail(userEmail);
+        User user=this.userRepository.findById(loggedInUserId).orElseThrow(InvalidUserIdException::new);
+        return UserMapper.MapToViewModel(user);
     }
 
 
