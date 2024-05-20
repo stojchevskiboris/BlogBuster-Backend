@@ -97,5 +97,20 @@ public class UserController {
     public UserDTO details(){
         return this.userService.getUserDetails();
     }
+
+    @GetMapping("/discoverUsers/{id}")
+    public List<UserDTO> discoverUsers(@PathVariable Long id){
+        return this.userService.discoverPeople(id);
+    }
+
+    @GetMapping("/getTotalPostsByUserId/{id}")
+    public int getTotalPostsByUserId(@PathVariable Long id){
+        return userService.getTotalPostsByUserId(id);
+    }
+
+    @GetMapping("/getTotalFollowersByUserId/{id}")
+    public int getTotalFollowersByUserId(@PathVariable Long id){
+        return userService.getTotalFollowersByUserId(id);
+    }
 }
 

@@ -54,4 +54,10 @@ public class CategoryRestController {
         this.categoryService.deleteCategory(categoryId);
         return "redirect:/api/categories";
     }
+
+    @GetMapping("/discoverCategories/{userId}")
+    public List<CategoryDTO> discoverCategories(@PathVariable Long userId)
+    {
+        return this.categoryService.discoverCategories(userId);
+    }
 }

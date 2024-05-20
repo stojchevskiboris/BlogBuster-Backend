@@ -216,5 +216,21 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
         return UserMapper.MapToViewModel(user);
     }
 
+    public int getTotalPostsByUserId(Long id){
+        return postRepository.findPostsByAuthorId(id).size();
+    }
 
+    public int getTotalFollowersByUserId(Long userId){
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()){
+            throw new InvalidUserIdException();
+        }
+        int totalFollowers = 0;
+        totalFollowers = (int) userRepository.findAll().stream()
+                .filter(user -> user.getFollowingUsers().stream()
+                        .anyMatch(followingUser -> followingUser.getId().equals(userId)))
+                .count();
+
+        return totalFollowers;
+    }
 }

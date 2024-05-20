@@ -31,4 +31,8 @@ public interface UserService {
     List<Long> getLikedPosts(Long userId);
 
     UserDTO getUserDetails();
+
+    int getTotalPostsByUserId(Long userId);
+
+    int getTotalFollowersByUserId(Long userId);
 }
