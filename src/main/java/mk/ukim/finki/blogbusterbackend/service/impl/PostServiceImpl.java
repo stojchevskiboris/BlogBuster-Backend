@@ -2,23 +2,24 @@ package mk.ukim.finki.blogbusterbackend.service.impl;
 
 import jakarta.transaction.Transactional;
 import mk.ukim.finki.blogbusterbackend.model.Category;
+import mk.ukim.finki.blogbusterbackend.model.Image;
 import mk.ukim.finki.blogbusterbackend.model.Post;
 import mk.ukim.finki.blogbusterbackend.model.User;
 import mk.ukim.finki.blogbusterbackend.model.dto.FilterDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.PostDTO;
+import mk.ukim.finki.blogbusterbackend.model.exceptions.ImageNotFoundException;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidUserIdException;
 import mk.ukim.finki.blogbusterbackend.model.mappers.PostMapper;
 import mk.ukim.finki.blogbusterbackend.repository.CategoryRepository;
+import mk.ukim.finki.blogbusterbackend.repository.ImageRepository;
 import mk.ukim.finki.blogbusterbackend.repository.PostRepository;
 import mk.ukim.finki.blogbusterbackend.repository.UserRepository;
 import mk.ukim.finki.blogbusterbackend.service.PostService;
 import mk.ukim.finki.blogbusterbackend.utils.UserUtils;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,11 +29,13 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final ImageRepository imageRepository;
 
-    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, CategoryRepository categoryRepository, ImageRepository imageRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
+        this.imageRepository = imageRepository;
     }
 
     public List<PostDTO> getAllPosts() {
@@ -64,13 +67,13 @@ public class PostServiceImpl implements PostService {
                 : categoryRepository.findCategoryByName(postDto.getCategoryName());
 
         Category category = categoryOptional.orElse(null);
-
+        Image image=imageRepository.findById(postDto.getImageId()).orElseThrow(ImageNotFoundException::new);
         Post post = new Post(
                 postDto.getTitle(),
                 postDto.getContent(),
                 user,
                 category,
-                postDto.getImage()
+                image
         );
 
         post.setCreation_date(LocalDateTime.now());
@@ -91,12 +94,17 @@ public class PostServiceImpl implements PostService {
         if (!post.get().getAuthor().getEmail().equals(user.get().getEmail())) {
             throw new Exception("Post not allowed to change");
         }
+        Image image=imageRepository.findById(postDto.getImageId()).orElseThrow(ImageNotFoundException::new);
 
         post.get().setTitle(postDto.getTitle());
         post.get().setContent(postDto.getContent());
+        post.get().setImage(image);
         post.get().setIsModified(true);
         post.get().setModified_date(LocalDateTime.now());
         postRepository.save(post.get());
+        image.setPost(post.get());
+        image.setAuthor(user.get());
+        imageRepository.save(image);
         return post;
     }
 

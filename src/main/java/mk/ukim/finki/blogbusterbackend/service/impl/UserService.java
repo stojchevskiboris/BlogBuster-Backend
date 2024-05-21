@@ -16,6 +16,7 @@ import mk.ukim.finki.blogbusterbackend.repository.PostRepository;
 import mk.ukim.finki.blogbusterbackend.repository.UserRepository;
 
 
+import mk.ukim.finki.blogbusterbackend.utils.UserUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,6 +24,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,11 +52,10 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
     }
     @Override
     public List<UserDTO> discoverPeople(Long userId) {
-        User currentUser = userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
+        User currentUser = userRepository.findByEmail(UserUtils.getLoggedUserEmail()).orElseThrow(InvalidUserIdException::new);
         List<User> nonFollowers = userRepository.findAll().stream().
-                filter(user -> !user.equals(currentUser))
-                .filter(user -> !user.getFollowingUsers().contains(currentUser))
-                .sorted((u1,u2)->Integer.compare(u1.getFollowingUsers().size(),u2.getFollowingUsers().size()))
+                filter(user -> !user.equals(currentUser) && !currentUser.getFollowingUsers().contains(user))
+                .sorted(Comparator.comparingInt(user -> user.getFollowingUsers().size()))
                 .limit(10)
                 .collect(Collectors.toList());
         return UserMapper.MapToListViewModel(nonFollowers);
