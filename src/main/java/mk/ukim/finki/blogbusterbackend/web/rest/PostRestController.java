@@ -1,6 +1,7 @@
 package mk.ukim.finki.blogbusterbackend.web.rest;
 
 import mk.ukim.finki.blogbusterbackend.model.User;
+import mk.ukim.finki.blogbusterbackend.model.dto.AddPostDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.PostDTO;
 import mk.ukim.finki.blogbusterbackend.service.PostService;
 import mk.ukim.finki.blogbusterbackend.service.UserService;
@@ -34,7 +35,7 @@ public class PostRestController {
     }
 
     @PostMapping("/add")
-    public boolean addPost(@RequestBody PostDTO postDto) throws Exception {
+    public boolean addPost(@RequestBody AddPostDTO postDto) throws Exception {
         this.postService.addPost(postDto);
         return true;
     }

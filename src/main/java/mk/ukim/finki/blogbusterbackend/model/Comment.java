@@ -3,6 +3,7 @@ package mk.ukim.finki.blogbusterbackend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import mk.ukim.finki.blogbusterbackend.model.dto.CommentDTO;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "blog_comments")
+@ToString(onlyExplicitlyIncluded = true)
 @RequiredArgsConstructor
 public class Comment {
     @Id

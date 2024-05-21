@@ -3,6 +3,7 @@ package mk.ukim.finki.blogbusterbackend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @Table(name = "blog_replies")
+@ToString(onlyExplicitlyIncluded = true)
 @RequiredArgsConstructor
 public class Reply {
     @Id

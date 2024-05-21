@@ -3,6 +3,7 @@ package mk.ukim.finki.blogbusterbackend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "blog_posts")
+@ToString(onlyExplicitlyIncluded = true)
 @RequiredArgsConstructor
 public class Post {
     @Id

@@ -2,6 +2,7 @@ package mk.ukim.finki.blogbusterbackend.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import mk.ukim.finki.blogbusterbackend.model.enumerations.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,6 +13,7 @@ import java.util.*;
 @Data
 @Entity
 @Table(name = "_user")
+@ToString(onlyExplicitlyIncluded = true)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

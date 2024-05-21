@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import mk.ukim.finki.blogbusterbackend.model.Category;
 import mk.ukim.finki.blogbusterbackend.model.Post;
 import mk.ukim.finki.blogbusterbackend.model.User;
+import mk.ukim.finki.blogbusterbackend.model.dto.AddPostDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.FilterDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.PostDTO;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidUserIdException;
@@ -52,25 +53,25 @@ public class PostServiceImpl implements PostService {
 
 
     @Transactional
-    public Optional<Post> addPost(PostDTO postDto) throws Exception {
+    public Optional<Post> addPost(AddPostDTO data) throws Exception {
         Optional<User> userOptional = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
         if (userOptional.isEmpty()) {
             throw new Exception("User not existing");
         }
         User user = userOptional.get();
 
-        Optional<Category> categoryOptional = (postDto.getCategoryName() == null || postDto.getCategoryName().isEmpty())
+        Optional<Category> categoryOptional = (data.getData().getCategoryName() == null || data.getData().getCategoryName().isEmpty())
                 ? Optional.empty()
-                : categoryRepository.findCategoryByName(postDto.getCategoryName());
+                : categoryRepository.findCategoryByName(data.getData().getCategoryName());
 
         Category category = categoryOptional.orElse(null);
 
         Post post = new Post(
-                postDto.getTitle(),
-                postDto.getContent(),
+                data.getData().getTitle(),
+                data.getData().getContent(),
                 user,
                 category,
-                postDto.getImage()
+                data.getData().getImage()
         );
 
         post.setCreation_date(LocalDateTime.now());
