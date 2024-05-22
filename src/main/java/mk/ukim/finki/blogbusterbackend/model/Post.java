@@ -46,14 +46,17 @@ public class Post {
     @ManyToMany(mappedBy = "likedPosts", cascade = CascadeType.ALL)
     private List<User> likedByUsers;
 
-    @Lob
-    @Column(name = "image", nullable = true)
-    private byte[] image;
+//    @Lob
+//    @Column(name = "image", nullable = true)
+//    private byte[] image;
+
+    @OneToOne
+    private Image image;
 
 
 
 
-    public Post(String title, String content, User author, Category category, byte[] image) {
+    public Post(String title, String content, User author, Category category, Image image) {
         this.title = title;
         this.content = content;
         this.author = author;
@@ -64,5 +67,15 @@ public class Post {
         this.isModified = false;
     }
 
+//    public Post(String title, String content, User author, Category category) {
+//        this.title = title;
+//        this.content = content;
+//        this.author = author;
+//        this.category = category;
+//        this.comments = new ArrayList<>();
+//        this.likedByUsers = new ArrayList<>();
+//        this.images=new ArrayList<>();
+//        this.isModified = false;
+//    }
 
 }

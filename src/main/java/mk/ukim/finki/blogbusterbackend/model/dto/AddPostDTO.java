@@ -4,11 +4,13 @@ import lombok.Getter;
 
 @Getter
 public class AddPostDTO {
-    private PostDTO data;
+    private PostDTO postDTO;
+    private String image;
     private String userId;
 
-    public AddPostDTO(PostDTO data, String userId) {
-        this.data = data;
+    public AddPostDTO(PostDTO postDTO, String image, String userId) {
+        this.postDTO = postDTO;
+        this.image = image;
         this.userId = userId;
     }
 }

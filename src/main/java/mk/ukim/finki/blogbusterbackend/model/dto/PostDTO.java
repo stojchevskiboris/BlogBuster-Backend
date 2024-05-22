@@ -13,7 +13,7 @@ public class PostDTO {
     private String content;
     private String authorUsername;
     private String categoryName;
-    private byte[] image;
+    private Long imageId;
     private LocalDateTime creation_date;
     private LocalDateTime modified_date;
     private boolean isModified;
@@ -23,7 +23,7 @@ public class PostDTO {
 
 
     public PostDTO(Long id,  String title,  String content,  String authorUsername, String firstname, String lastname,
-                   String categoryName, byte[] image, LocalDateTime creation_date, LocalDateTime modified_date,
+                   String categoryName, Long imageId, LocalDateTime creation_date, LocalDateTime modified_date,
                    boolean isModified) {
         this.id = id;
         this.title = title;
@@ -32,9 +32,23 @@ public class PostDTO {
         this.firstname = firstname;
         this.lastname = lastname;
         this.categoryName = categoryName;
-        this.image = image;
+        this.imageId = imageId;
         this.creation_date = creation_date;
         this.modified_date = modified_date;
         this.isModified = isModified;
     }
+//public PostDTO(Long id,  String title,  String content,  String authorUsername, String firstname, String lastname,
+//               String categoryName, LocalDateTime creation_date, LocalDateTime modified_date,
+//               boolean isModified) {
+//    this.id = id;
+//    this.title = title;
+//    this.content = content;
+//    this.authorUsername = authorUsername;
+//    this.firstname = firstname;
+//    this.lastname = lastname;
+//    this.categoryName = categoryName;
+//    this.creation_date = creation_date;
+//    this.modified_date = modified_date;
+//    this.isModified = isModified;
+//}
 }
