@@ -58,8 +58,8 @@ public class PostRestController {
         return this.postService.totalLikesOfPost(postId);
     }
 
-    @GetMapping("/followingPosts")
-    public List<PostDTO> followingPosts(@RequestBody Long userId){
+    @GetMapping("/followingPosts/{userId}")
+    public List<PostDTO> followingPosts(@PathVariable Long userId){
         return this.postService.getPostsByFollowedUsers(userId);
     }
 
