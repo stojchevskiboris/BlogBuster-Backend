@@ -217,9 +217,15 @@ public class PostServiceImpl implements PostService {
         List<Post> postsOfFollowingUsers = followingUsers.stream()
                 .flatMap(followingUser -> postRepository.findPostsByAuthorId(followingUser.getId()).stream())
                 .collect(Collectors.toList());
-
         return PostMapper.MapToListViewModel(postsOfFollowingUsers);
     }
 
+    @Override // prikaz na postovi koga korsinikot ke poseti dr profil
+    public List<PostDTO> getPostsFromUserProfile(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
+        List<User> users = userRepository.findAll();
+        List<Post> postsOfAllUsers =postRepository.findPostsByAuthorId(user.getId()).stream().toList();
+        return PostMapper.MapToListViewModel(postsOfAllUsers);
+    }
 
 }

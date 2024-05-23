@@ -1,7 +1,9 @@
 package mk.ukim.finki.blogbusterbackend.web.rest;
 
+import mk.ukim.finki.blogbusterbackend.model.Post;
 import mk.ukim.finki.blogbusterbackend.model.User;
 import mk.ukim.finki.blogbusterbackend.model.dto.AddPostDTO;
+import mk.ukim.finki.blogbusterbackend.model.dto.FilterDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.PostDTO;
 import mk.ukim.finki.blogbusterbackend.service.PostService;
 import mk.ukim.finki.blogbusterbackend.service.UserService;
@@ -82,5 +84,17 @@ public class PostRestController {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Long loggedInUserId = userService.getUserIdByEmail(userEmail);
         return userService.getLikedPosts(loggedInUserId);
+    }
+
+    @PostMapping("/filterPosts")
+    public List<Post> filterPosts(@RequestBody FilterDTO filterDTO)
+    {
+        return this.postService.filterPosts(filterDTO);
+    }
+
+    @GetMapping("/viewPosts/{id}")
+    public List<PostDTO> getPostsFromUserProfile(@PathVariable Long id)
+    {
+        return this.postService.getPostsFromUserProfile(id);
     }
 }

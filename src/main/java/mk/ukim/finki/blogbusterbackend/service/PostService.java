@@ -18,6 +18,6 @@ public interface PostService {
     List<Post> filterPosts(FilterDTO filterDTO);
     List<PostDTO> getPostsByFollowedUsers(Long userId);
 
-
+    List<PostDTO> getPostsFromUserProfile(Long userId);
     int totalLikesOfPost(Long postId) throws Exception;
 }
