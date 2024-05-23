@@ -9,11 +9,13 @@ public class ImageDTO {
     private byte[] picture;
     private Long postId;
     private String authorUsername;
+    private String pictureBytesString;
 
-    public ImageDTO(Long id, byte[] picture,String authorUsername,@NonNull Long postId) {
+    public ImageDTO(Long id, byte[] picture,String authorUsername,@NonNull Long postId, String pictureBytesString) {
         this.id = id;
         this.picture = picture;
         this.postId = postId;
         this.authorUsername=authorUsername;
+        this.pictureBytesString = pictureBytesString;
     }
 }

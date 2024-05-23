@@ -40,7 +40,7 @@ public class User implements UserDetails {
     private byte[] image;
 
     @Column(name = "replies")
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies;
 
     @Column(name = "users")
@@ -52,7 +52,7 @@ public class User implements UserDetails {
     private List<Category> followingCategories;
 
     @Column(name = "likedPosts")
-    @ManyToMany//(mappedBy = "likedByUsers")
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Post> likedPosts;
 
 

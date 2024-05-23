@@ -43,14 +43,14 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    @ManyToMany(mappedBy = "likedPosts", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "likedPosts")
     private List<User> likedByUsers;
 
 //    @Lob
 //    @Column(name = "image", nullable = true)
 //    private byte[] image;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Image image;
 
 

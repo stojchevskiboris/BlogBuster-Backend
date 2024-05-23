@@ -5,7 +5,9 @@ import mk.ukim.finki.blogbusterbackend.model.Image;
 import mk.ukim.finki.blogbusterbackend.model.dto.CommentDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.ImageDTO;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ImageMapper {
@@ -14,7 +16,8 @@ public class ImageMapper {
                 image.getId(),
                 image.getPicture(),
                 image.getAuthor().getUsername(),
-                image.getPost().getId()
+                image.getPost().getId(),
+                new String(image.getPicture(), StandardCharsets.UTF_8)
         );
     }
 

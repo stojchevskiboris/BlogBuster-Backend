@@ -1,26 +1,21 @@
 package mk.ukim.finki.blogbusterbackend.service.impl;
 
 import jakarta.transaction.Transactional;
-import mk.ukim.finki.blogbusterbackend.model.Category;
-import mk.ukim.finki.blogbusterbackend.model.Image;
-import mk.ukim.finki.blogbusterbackend.model.Post;
-import mk.ukim.finki.blogbusterbackend.model.User;
+import mk.ukim.finki.blogbusterbackend.model.*;
 import mk.ukim.finki.blogbusterbackend.model.dto.AddPostDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.FilterDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.PostDTO;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.ImageNotFoundException;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidUserIdException;
 import mk.ukim.finki.blogbusterbackend.model.mappers.PostMapper;
-import mk.ukim.finki.blogbusterbackend.repository.CategoryRepository;
-import mk.ukim.finki.blogbusterbackend.repository.ImageRepository;
-import mk.ukim.finki.blogbusterbackend.repository.PostRepository;
-import mk.ukim.finki.blogbusterbackend.repository.UserRepository;
+import mk.ukim.finki.blogbusterbackend.repository.*;
 import mk.ukim.finki.blogbusterbackend.service.PostService;
 import mk.ukim.finki.blogbusterbackend.utils.UserUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,19 +23,25 @@ import java.util.stream.Collectors;
 @Service
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
+    private final ReplyRepository replyRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final ImageRepository imageRepository;
 
-    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, CategoryRepository categoryRepository, ImageRepository imageRepository) {
+    public PostServiceImpl(PostRepository postRepository, CommentRepository commentRepository, ReplyRepository replyRepository, UserRepository userRepository, CategoryRepository categoryRepository, ImageRepository imageRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
+        this.replyRepository = replyRepository;
         this.categoryRepository = categoryRepository;
         this.imageRepository = imageRepository;
     }
 
     public List<PostDTO> getAllPosts() {
         List<Post> posts = this.postRepository.findAll();
+        // Sort the posts by modified date in descending order
+        posts.sort(Comparator.comparing(Post::getModified_date).reversed());
         return PostMapper.MapToListViewModel(posts);
     }
 
@@ -135,6 +136,44 @@ public class PostServiceImpl implements PostService {
             throw new Exception("Post not allowed to change");
         }
         postRepository.deleteById(postId);
+    }
+
+    @Transactional
+    public void deletePost2(Long postId) throws Exception {
+        Optional<Post> post = this.postRepository.findById(postId);
+        Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
+        if (post.isEmpty()) {
+            throw new Exception("Post not existing");
+        }
+
+        if (!post.get().getAuthor().getEmail().equals(user.get().getEmail())) {
+            throw new Exception("Post not allowed to change");
+        }
+
+        postRepository.deleteById(postId);
+//        List<Image> images = imageRepository.findImagesByPostId(postId);
+//        if (images != null && !images.isEmpty()) {
+//            imageRepository.deleteAll(images);
+//        }
+//        List<Comment> comments = commentRepository.findCommentsByPostId(postId);
+//        if (comments != null && !images.isEmpty()) {
+//            for(Comment c : comments){
+//                List<Reply> replies = replyRepository.findAllByCommentId(c.getId());
+//                if (replies != null && !images.isEmpty()) {
+//                    replyRepository.deleteAll(replies);
+//                }
+//            }
+//            commentRepository.deleteAll(comments);
+//        }
+//        var users = userRepository.findAll();
+//        for(User u : users){
+//            for(Post p : u.getLikedPosts()){
+//                if (p.getId() == postId){
+//                    // remove this post from u.likedPosts
+//                }
+//            }
+//        }
+
     }
 
     //method for converting Date object to String ---> used for the search part
