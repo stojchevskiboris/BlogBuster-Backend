@@ -100,28 +100,34 @@ public class PostServiceImpl implements PostService {
     }
 
     @Transactional
-    public Optional<Post> editPost(PostDTO postDto, Long postId) throws Exception {
-        Optional<Post> post = this.postRepository.findById(postId);
+    public PostDTO editPost(AddPostDTO data) throws Exception {
+        Optional<Post> optionalPost = this.postRepository.findById(data.getPostDTO().getId());
         Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
-        if (post.isEmpty()) {
+        if (optionalPost.isEmpty()) {
             throw new Exception("Post not existing");
         }
 
-        if (!post.get().getAuthor().getEmail().equals(user.get().getEmail())) {
+        Post post = optionalPost.get();
+
+        if (!post.getAuthor().getEmail().equals(user.get().getEmail())) {
             throw new Exception("Post not allowed to change");
         }
-        Image image=imageRepository.findById(postDto.getImageId()).orElseThrow(ImageNotFoundException::new);
 
-        post.get().setTitle(postDto.getTitle());
-        post.get().setContent(postDto.getContent());
-        post.get().setImage(image);
-        post.get().setIsModified(true);
-        post.get().setModified_date(LocalDateTime.now());
-        postRepository.save(post.get());
-        image.setPost(post.get());
-        image.setAuthor(user.get());
-        imageRepository.save(image);
-        return post;
+        post.setTitle(data.getPostDTO().getTitle());
+        post.setContent(data.getPostDTO().getContent());
+        post.setIsModified(true);
+        post.setModified_date(LocalDateTime.now());
+
+
+        if (data.getImage()!=null){
+            Image image = new Image(data.getImage().getBytes(), user.get(), post);
+            imageRepository.save(image);
+            post.setImage(image);
+            postRepository.save(post);
+        }
+
+        postRepository.save(post);
+        return PostMapper.MapToViewModel(post);
     }
 
     @Transactional

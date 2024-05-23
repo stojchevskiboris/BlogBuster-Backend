@@ -13,7 +13,7 @@ public interface PostService {
     PostDTO getPostById(Long postId);
     List<PostDTO> getAllByUserId(Long authorId);
     Optional<Post> addPost(AddPostDTO postDto) throws Exception;
-    Optional<Post> editPost(PostDTO postDto, Long postId) throws Exception;
+    PostDTO editPost(AddPostDTO data) throws Exception;
     void deletePost(Long postId) throws Exception;
     List<Post> filterPosts(FilterDTO filterDTO);
     List<PostDTO> getPostsByFollowedUsers(Long userId);

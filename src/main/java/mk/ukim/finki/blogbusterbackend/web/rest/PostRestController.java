@@ -43,8 +43,8 @@ public class PostRestController {
     }
 
     @PostMapping("/edit/{postId}")
-    public boolean editPost(@RequestBody PostDTO postDTO, @PathVariable Long postId) throws Exception {
-        this.postService.editPost(postDTO,postId);
+    public boolean editPost(@RequestBody AddPostDTO data) throws Exception {
+        this.postService.editPost(data);
         return true;
     }
 

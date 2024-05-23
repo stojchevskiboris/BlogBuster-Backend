@@ -20,7 +20,8 @@ public class PostMapper {
                 post.getImage() !=null ? post.getImage().getId(): null,
                 post.getCreation_date(),
                 post.getModified_date(),
-                post.getIsModified()
+                post.getIsModified(),
+                post.getAuthor().getId()
         );
     }
     public static List<PostDTO> MapToListViewModel(List<Post> posts){
