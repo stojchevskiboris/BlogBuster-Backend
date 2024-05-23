@@ -132,9 +132,20 @@ public class PostServiceImpl implements PostService {
             throw new Exception("Post not existing");
         }
 
+        if(user.isEmpty()){
+            throw new InvalidUserIdException();
+        }
+
         if (!post.get().getAuthor().getEmail().equals(user.get().getEmail())) {
             throw new Exception("Post not allowed to change");
         }
+
+        List<User> users = userRepository.findAll();
+        for (User u : users) {
+            u.getLikedPosts().removeIf(p -> p.getId().equals(postId));
+            userRepository.save(u);
+        }
+
         postRepository.deleteById(postId);
     }
 
