@@ -2,6 +2,8 @@ package mk.ukim.finki.blogbusterbackend.web.rest;
 
 import mk.ukim.finki.blogbusterbackend.model.dto.CategoryDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.PostDTO;
+import mk.ukim.finki.blogbusterbackend.model.mappers.CategoryMapper;
+import mk.ukim.finki.blogbusterbackend.model.mappers.KeyValue;
 import mk.ukim.finki.blogbusterbackend.service.CategoryService;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +24,12 @@ public class CategoryRestController {
     public List<CategoryDTO> getAllCategories()
     {
         return categoryService.getAllCategories();
+    }
+
+    @GetMapping(value = {"/lookup"})
+    public List<KeyValue> lookupCategories()
+    {
+        return CategoryMapper.MapToKeyValueList(categoryService.getAllCategories());
     }
 
     @GetMapping("/{categoryId}")

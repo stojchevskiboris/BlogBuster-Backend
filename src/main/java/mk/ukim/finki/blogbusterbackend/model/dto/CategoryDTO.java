@@ -12,6 +12,7 @@ public class CategoryDTO {
 
     private Long id;
     private String name;
+    private String description;
     private List<User> followers;
     private List<Post>posts;
 
@@ -20,9 +21,10 @@ public class CategoryDTO {
         this.name = name;
     }
     public CategoryDTO() { }
-    public CategoryDTO(Long id, @NonNull String name, List<User> followers, List<Post> posts) {
+    public CategoryDTO(Long id, @NonNull String name, String description, List<User> followers, List<Post> posts) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.followers = followers;
         this.posts = posts;
     }

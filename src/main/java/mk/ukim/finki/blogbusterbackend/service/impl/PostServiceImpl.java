@@ -119,6 +119,21 @@ public class PostServiceImpl implements PostService {
         post.setModified_date(LocalDateTime.now());
 
 
+        if (data.getPostDTO() != null && data.getPostDTO().getCategoryName() != null){
+            Category category = null;
+            var optionalCategory = categoryRepository.findCategoryByName(data.getPostDTO().getCategoryName());
+            if (optionalCategory.isPresent()){
+                category = optionalCategory.get();
+            }
+            else {
+                category = new Category(data.getPostDTO().getCategoryName());
+                categoryRepository.save(category);
+            }
+            post.setCategory(category);
+        }
+
+
+
         if (data.getImage()!=null){
             Image image = new Image(data.getImage().getBytes(), user.get(), post);
             imageRepository.save(image);

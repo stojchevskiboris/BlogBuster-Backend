@@ -4,6 +4,8 @@ import mk.ukim.finki.blogbusterbackend.model.Category;
 import mk.ukim.finki.blogbusterbackend.model.Comment;
 import mk.ukim.finki.blogbusterbackend.model.dto.CategoryDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.CommentDTO;
+import org.hibernate.mapping.Any;
+import org.slf4j.event.KeyValuePair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,7 @@ public class CategoryMapper {
         return new CategoryDTO(
                 category.getId(),
                 category.getName(),
+                category.getDescription(),
                 category.getFollowers(),
                 category.getPosts());
     }
@@ -23,5 +26,17 @@ public class CategoryMapper {
             categoryDTOS.add(MapToViewModel(cat));
         }
         return categoryDTOS;
+    }
+
+    public static KeyValue MapToKeyValue(CategoryDTO dto){
+        return new KeyValue(dto.getId(), dto.getName());
+    }
+
+    public static List<KeyValue> MapToKeyValueList(List<CategoryDTO> DTOs){
+        List<KeyValue> categoryKeyValues = new ArrayList<>();
+        for (var cat : DTOs){
+            categoryKeyValues.add(MapToKeyValue(cat));
+        }
+        return categoryKeyValues;
     }
 }
