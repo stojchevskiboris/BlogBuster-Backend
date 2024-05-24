@@ -112,5 +112,11 @@ public class UserController {
     public int getTotalFollowersByUserId(@PathVariable Long id){
         return userService.getTotalFollowersByUserId(id);
     }
+
+    @GetMapping("/searchUsers")
+    public List<UserDTO> searchUsers(@RequestParam String context)
+    {
+        return this.userService.searchUsers(context);
+    }
 }
 
