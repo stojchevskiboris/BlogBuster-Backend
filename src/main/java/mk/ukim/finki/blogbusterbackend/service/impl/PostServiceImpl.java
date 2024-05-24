@@ -212,9 +212,8 @@ public class PostServiceImpl implements PostService {
     }
 
     //method for converting Date object to String ---> used for the search part
-    public String convertDateToString(LocalDateTime creationDate)
-    {
-        DateTimeFormatter dateTimeFormat=DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public String convertDateToString(LocalDateTime creationDate) {
+        DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
         return dateTimeFormat.format(creationDate);
     }
     @Transactional
@@ -222,15 +221,15 @@ public class PostServiceImpl implements PostService {
         List<Post> posts = postRepository.findAll();
         return posts.stream().
                 filter(p -> (filterDTO.getCategoryId() == null || p.getCategory().getId().equals(filterDTO.getCategoryId())))
-                .filter(p -> (filterDTO.getAuthorUsername() == null || p.getAuthor().getUsername().equalsIgnoreCase(filterDTO.getAuthorUsername())))
+                .filter(p -> (filterDTO.getAuthorUsername() == null || p.getAuthor().getUsername().toLowerCase().contains(filterDTO.getAuthorUsername().toLowerCase())))
                 .filter(p -> (filterDTO.getFrom() == null || p.getCreation_date().isAfter(filterDTO.getFrom())))
                 .filter(p -> (filterDTO.getTo() == null || p.getCreation_date().isBefore(filterDTO.getTo())))
                 .filter(p -> (filterDTO.getTitle() == null || p.getTitle().equalsIgnoreCase(filterDTO.getTitle())))
                 .filter(p -> (filterDTO.getContext() == null ||
-                        p.getContent().contains(filterDTO.getContext()) ||
-                        p.getAuthor().getUsername().contains(filterDTO.getContext()) ||
-                        p.getTitle().contains(filterDTO.getContext())) ||
-                        convertDateToString(p.getCreation_date()).contains(filterDTO.getContext()))
+                        p.getContent().toLowerCase().contains(filterDTO.getContext().toLowerCase()) ||
+                        p.getAuthor().getUsername().toLowerCase().contains(filterDTO.getContext().toLowerCase()) ||
+                        p.getTitle().toLowerCase().contains(filterDTO.getContext().toLowerCase())) ||
+                        convertDateToString(p.getCreation_date()).toLowerCase().contains(filterDTO.getContext().toLowerCase()))
                 .collect(Collectors.toList());
     }
 
