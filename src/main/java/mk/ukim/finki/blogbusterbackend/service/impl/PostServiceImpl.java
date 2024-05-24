@@ -41,7 +41,10 @@ public class PostServiceImpl implements PostService {
     public List<PostDTO> getAllPosts() {
         List<Post> posts = this.postRepository.findAll();
         // Sort the posts by modified date in descending order
-        posts.sort(Comparator.comparing(Post::getModified_date).reversed());
+//        posts.sort(Comparator.comparing(Post::getModified_date).reversed());
+        posts.sort(Comparator.comparing(
+                        Post::getModified_date, Comparator.nullsLast(Comparator.reverseOrder()))
+                .thenComparing(Post::getCreation_date, Comparator.nullsLast(Comparator.reverseOrder())));
         return PostMapper.MapToListViewModel(posts);
     }
 
