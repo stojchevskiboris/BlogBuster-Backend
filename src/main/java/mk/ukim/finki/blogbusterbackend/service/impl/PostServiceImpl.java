@@ -216,21 +216,18 @@ public class PostServiceImpl implements PostService {
         DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
         return dateTimeFormat.format(creationDate);
     }
+
+
     @Transactional
-    public List<Post> filterPosts(FilterDTO filterDTO) {
+    public List<PostDTO> filterPosts(FilterDTO filterDTO) {
         List<Post> posts = postRepository.findAll();
-        return posts.stream().
-                filter(p -> (filterDTO.getCategoryId() == null || p.getCategory().getId().equals(filterDTO.getCategoryId())))
-                .filter(p -> (filterDTO.getAuthorUsername() == null || p.getAuthor().getUsername().toLowerCase().contains(filterDTO.getAuthorUsername().toLowerCase())))
-                .filter(p -> (filterDTO.getFrom() == null || p.getCreation_date().isAfter(filterDTO.getFrom())))
-                .filter(p -> (filterDTO.getTo() == null || p.getCreation_date().isBefore(filterDTO.getTo())))
-                .filter(p -> (filterDTO.getTitle() == null || p.getTitle().equalsIgnoreCase(filterDTO.getTitle())))
-                .filter(p -> (filterDTO.getContext() == null ||
-                        p.getContent().toLowerCase().contains(filterDTO.getContext().toLowerCase()) ||
-                        p.getAuthor().getUsername().toLowerCase().contains(filterDTO.getContext().toLowerCase()) ||
-                        p.getTitle().toLowerCase().contains(filterDTO.getContext().toLowerCase())) ||
-                        convertDateToString(p.getCreation_date()).toLowerCase().contains(filterDTO.getContext().toLowerCase()))
+        posts = posts.stream()
+                .filter(p -> (filterDTO.getCategoryId() == null || p.getCategory().getId().equals(filterDTO.getCategoryId())))
+                .filter(p -> (filterDTO.getAuthorUsername() == null || filterDTO.getAuthorUsername().isEmpty() || p.getAuthor().getUsername().toLowerCase().contains(filterDTO.getAuthorUsername().toLowerCase())))
+                .filter(p -> (filterDTO.getTitle() == null || filterDTO.getTitle().isEmpty() || p.getTitle().toLowerCase().contains(filterDTO.getTitle().toLowerCase()) ||
+                        p.getContent().toLowerCase().contains(filterDTO.getTitle().toLowerCase())))
                 .collect(Collectors.toList());
+        return PostMapper.MapToListViewModel(posts);
     }
 
     @Override

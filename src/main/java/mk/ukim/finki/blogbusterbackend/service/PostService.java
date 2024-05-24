@@ -15,7 +15,7 @@ public interface PostService {
     Optional<Post> addPost(AddPostDTO postDto) throws Exception;
     PostDTO editPost(AddPostDTO data) throws Exception;
     void deletePost(Long postId) throws Exception;
-    List<Post> filterPosts(FilterDTO filterDTO);
+    List<PostDTO> filterPosts(FilterDTO filterDTO);
     List<PostDTO> getPostsByFollowedUsers(Long userId);
 
     List<PostDTO> getPostsFromUserProfile(Long userId);

@@ -87,7 +87,7 @@ public class PostRestController {
     }
 
     @PostMapping("/filterPosts")
-    public List<Post> filterPosts(@RequestBody FilterDTO filterDTO)
+    public List<PostDTO> filterPosts(@RequestBody FilterDTO filterDTO)
     {
         return this.postService.filterPosts(filterDTO);
     }
