@@ -234,4 +234,18 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
 
         return totalFollowers;
     }
+
+    @Override
+    public List<UserDTO> searchUsers(String context) {
+        User currentUser = userRepository.findByEmail(UserUtils.getLoggedUserEmail()).orElseThrow(InvalidUserIdException::new);
+        List<User>user=userRepository.findAll().stream()
+                .filter(u->!u.equals(currentUser))
+                .filter(u->u.getEmail().toLowerCase().contains(context.toLowerCase()) ||
+                        u.getFirstname().toLowerCase().contains(context.toLowerCase()) ||
+                        u.getLastname().toLowerCase().contains(context.toLowerCase()))
+                .limit(5)
+                .collect(Collectors.toList());
+        return UserMapper.MapToListViewModel(user);
+    }
+
 }
