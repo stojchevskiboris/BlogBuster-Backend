@@ -10,12 +10,13 @@ public class ReplyDTO {
     private Long id;
     private String content;
     private String authorUsername;
+    private String authorId;
     private Long commentId;
     private String firstname;
     private String lastname;
     private LocalDateTime reply_date;
 
-    public ReplyDTO(Long id, @NonNull String content,  String authorUsername, @NonNull Long commentId, String firstname, String lastname, LocalDateTime reply_date) {
+    public ReplyDTO(Long id, @NonNull String content,  String authorUsername, @NonNull Long commentId, String firstname, String lastname, LocalDateTime reply_date, String authorId) {
         this.id = id;
         this.content = content;
         this.authorUsername = authorUsername;
@@ -23,5 +24,6 @@ public class ReplyDTO {
         this.firstname = firstname;
         this.lastname = lastname;
         this.reply_date = reply_date;
+        this.authorId = authorId;
     }
 }

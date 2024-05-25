@@ -230,6 +230,7 @@ public class PostServiceImpl implements PostService {
             throw new InvalidUserIdException();
         }
         List<User> followingUsers = user.getFollowingUsers();
+        followingUsers.add(user); // i postovite od samiot user treba da se gledaat
         return followingUsers.stream()
                 .flatMap(followingUser -> postRepository.findPostsByAuthorId(followingUser.getId()).stream())
                 .collect(Collectors.toList());

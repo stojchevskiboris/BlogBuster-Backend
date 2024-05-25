@@ -10,6 +10,7 @@ public class CommentDTO {
     private Long id;
     private String content;
     private String authorUsername;
+    private String authorId;
     private Long postId;
     private LocalDateTime comment_date;
 
@@ -18,7 +19,7 @@ public class CommentDTO {
     private String lastname;
 
     public CommentDTO(Long id, @NonNull String content,  String authorUsername, @NonNull Long postId, LocalDateTime comment_date,
-                      String firstname, String lastname) {
+                      String firstname, String lastname, String authorId) {
         this.id = id;
         this.content = content;
         this.authorUsername = authorUsername;
@@ -26,5 +27,6 @@ public class CommentDTO {
         this.comment_date = comment_date;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.authorId = authorId;
     }
 }

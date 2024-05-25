@@ -17,7 +17,8 @@ public class ReplyMapper {
                 reply.getComment().getId(),
                 reply.getAuthor().getFirstname(),
                 reply.getAuthor().getLastname(),
-                reply.getReply_date()
+                reply.getReply_date(),
+                reply.getAuthor().getId().toString()
         );
     }
 
