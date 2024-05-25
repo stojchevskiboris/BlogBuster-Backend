@@ -1,12 +1,13 @@
 package mk.ukim.finki.blogbusterbackend.web.rest;
 
-import mk.ukim.finki.blogbusterbackend.model.User;
+import mk.ukim.finki.blogbusterbackend.model.dto.EditUserDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.ReplyDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.UserDTO;
 import mk.ukim.finki.blogbusterbackend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -117,6 +118,18 @@ public class UserController {
     public List<UserDTO> searchUsers(@RequestParam String context)
     {
         return this.userService.searchUsers(context);
+    }
+
+    @PostMapping("/edit")
+    public boolean editUser(@RequestBody UserDTO userDTO)
+    {
+        this.userService.editUser(userDTO);
+        return true;
+    }
+
+    @PostMapping("/updatePassword")
+    public boolean editPassword(@RequestBody EditUserDTO editUserDTO) throws Exception {
+        return this.userService.updatePassword(editUserDTO);
     }
 }
 

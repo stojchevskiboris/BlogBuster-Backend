@@ -1,5 +1,6 @@
 package mk.ukim.finki.blogbusterbackend.service;
 
+import mk.ukim.finki.blogbusterbackend.model.dto.EditUserDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.UserDTO;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -37,4 +38,9 @@ public interface UserService {
     int getTotalFollowersByUserId(Long userId);
 
     List<UserDTO> searchUsers(String context);
+
+    UserDTO editUser(UserDTO userDTO);
+
+    Boolean updatePassword(EditUserDTO editUser) throws Exception;
+
 }

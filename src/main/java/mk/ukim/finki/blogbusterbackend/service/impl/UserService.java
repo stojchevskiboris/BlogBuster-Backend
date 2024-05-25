@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.blogbusterbackend.model.Category;
 import mk.ukim.finki.blogbusterbackend.model.Post;
 import mk.ukim.finki.blogbusterbackend.model.User;
+import mk.ukim.finki.blogbusterbackend.model.dto.EditUserDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.UserDTO;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidPostIdException;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidUserIdException;
@@ -17,6 +18,7 @@ import mk.ukim.finki.blogbusterbackend.repository.UserRepository;
 
 
 import mk.ukim.finki.blogbusterbackend.utils.UserUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -50,6 +52,7 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
         };
 
     }
+
     @Override
     public List<UserDTO> discoverPeople(Long userId) {
         User currentUser = userRepository.findByEmail(UserUtils.getLoggedUserEmail()).orElseThrow(InvalidUserIdException::new);
@@ -198,32 +201,33 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
 
     @Override
     public List<UserDTO> getFollowers(Long userId) {
-        User user=this.userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
+        User user = this.userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
         return UserMapper.MapToListViewModel(user.getFollowingUsers());
     }
+
     @Override
     public List<Long> getLikedPosts(Long userId) {
-        User user=this.userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
+        User user = this.userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
         return user.getLikedPosts()
                 .stream()
                 .map(Post::getId)
                 .collect(Collectors.toList());
     }
 
-    public UserDTO getUserDetails(){
+    public UserDTO getUserDetails() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Long loggedInUserId = getUserIdByEmail(userEmail);
-        User user=this.userRepository.findById(loggedInUserId).orElseThrow(InvalidUserIdException::new);
+        User user = this.userRepository.findById(loggedInUserId).orElseThrow(InvalidUserIdException::new);
         return UserMapper.MapToViewModel(user);
     }
 
-    public int getTotalPostsByUserId(Long id){
+    public int getTotalPostsByUserId(Long id) {
         return postRepository.findPostsByAuthorId(id).size();
     }
 
-    public int getTotalFollowersByUserId(Long userId){
+    public int getTotalFollowersByUserId(Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isEmpty()){
+        if (optionalUser.isEmpty()) {
             throw new InvalidUserIdException();
         }
         int totalFollowers = 0;
@@ -238,14 +242,57 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
     @Override
     public List<UserDTO> searchUsers(String context) {
         User currentUser = userRepository.findByEmail(UserUtils.getLoggedUserEmail()).orElseThrow(InvalidUserIdException::new);
-        List<User>user=userRepository.findAll().stream()
-                .filter(u->!u.equals(currentUser))
-                .filter(u->u.getEmail().toLowerCase().contains(context.toLowerCase()) ||
+        List<User> user = userRepository.findAll().stream()
+                .filter(u -> !u.equals(currentUser))
+                .filter(u -> u.getEmail().toLowerCase().contains(context.toLowerCase()) ||
                         u.getFirstname().toLowerCase().contains(context.toLowerCase()) ||
                         u.getLastname().toLowerCase().contains(context.toLowerCase()))
                 .limit(5)
                 .collect(Collectors.toList());
         return UserMapper.MapToListViewModel(user);
+    }
+
+    @Override
+    @Transactional
+    public UserDTO editUser(UserDTO editUser) {
+        User currentUser = userRepository.findByEmail(UserUtils.getLoggedUserEmail()).orElseThrow(InvalidUserIdException::new);
+        if (editUser.getFirstname() == null && editUser.getLastname() == null) {
+            return UserMapper.MapToViewModel(currentUser);
+        }
+        if (editUser.getFirstname() != null) {
+            currentUser.setFirstname(editUser.getFirstname());
+        }
+        if (editUser.getLastname() != null) {
+            currentUser.setLastname(editUser.getLastname());
+        }
+        return UserMapper.MapToViewModel(this.userRepository.save(currentUser));
+    }
+
+    @Override
+    @Transactional
+    public Boolean updatePassword(EditUserDTO editUser) throws Exception {
+        User currentUser = userRepository.findByEmail(UserUtils.getLoggedUserEmail()).orElseThrow(InvalidUserIdException::new);
+
+        if(editUser.getCurrentPassword()==null || editUser.getNewPassword()==null || editUser.getConfirmNewPassword()==null
+        || editUser.getCurrentPassword().isEmpty() || editUser.getNewPassword().isEmpty() || editUser.getConfirmNewPassword().isEmpty())
+        {
+            throw new Exception("All fields are required");
+        }
+
+        if(!new BCryptPasswordEncoder().matches(editUser.getCurrentPassword(),currentUser.getPassword()))
+        {
+            throw new Exception("Incorrect current password!");
+        }
+
+        if(!editUser.getNewPassword().equals(editUser.getConfirmNewPassword()))
+        {
+            throw new Exception("Passwords do not match!");
+        }
+
+        String newPassword=new BCryptPasswordEncoder().encode(editUser.getConfirmNewPassword());
+        currentUser.setPassword(newPassword);
+        userRepository.save(currentUser);
+        return true;
     }
 
 }
