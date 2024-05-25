@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -223,14 +224,13 @@ public class PostServiceImpl implements PostService {
         return PostMapper.MapToListViewModel(getPostByFollowedUsersImpl());
     }
 
-    private List<Post> getPostByFollowedUsersImpl(){
+    private List<Post> getPostByFollowedUsersImpl() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = this.userRepository.findByEmail(userEmail).orElseThrow(InvalidUserIdException::new);
-        if (user == null) {
-            throw new InvalidUserIdException();
-        }
-        List<User> followingUsers = user.getFollowingUsers();
-        followingUsers.add(user); // i postovite od samiot user treba da se gledaat
+
+        List<User> followingUsers = new ArrayList<>(user.getFollowingUsers()); // Create a new list to avoid modifying the original
+        followingUsers.add(user); // Add the current user to the new list
+
         return followingUsers.stream()
                 .flatMap(followingUser -> postRepository.findPostsByAuthorId(followingUser.getId()).stream())
                 .collect(Collectors.toList());
