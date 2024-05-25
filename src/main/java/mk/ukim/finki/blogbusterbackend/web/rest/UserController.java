@@ -28,8 +28,8 @@ public class UserController {
     @PostMapping("/{followeeId}/followUser")
     public ResponseEntity<String> followUser(@PathVariable Long followeeId) {
 
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long loggedInUserId = userService.getUserIdByEmail(userEmail);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long loggedInUserId = userService.getUserIdByUsername(username);
 
         if (loggedInUserId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
@@ -43,8 +43,8 @@ public class UserController {
     @PostMapping("/{followeeId}/unfollowUser")
     public ResponseEntity<String> unfollowUser(@PathVariable Long followeeId) {
 
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long loggedInUserId = userService.getUserIdByEmail(userEmail);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long loggedInUserId = userService.getUserIdByUsername(username);
 
         if (loggedInUserId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
@@ -56,8 +56,8 @@ public class UserController {
 
     @PostMapping("/{categoryId}/followCategory")
     public ResponseEntity<String> followCategory(@PathVariable Long categoryId) {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long loggedInUserId = userService.getUserIdByEmail(userEmail);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long loggedInUserId = userService.getUserIdByUsername(username);
 
         if (loggedInUserId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
@@ -69,8 +69,8 @@ public class UserController {
 
     @PostMapping("/{categoryId}/unfollowCategory")
     public ResponseEntity<String> unfollowCategory(@PathVariable Long categoryId){
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long loggedInUserId = userService.getUserIdByEmail(userEmail);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long loggedInUserId = userService.getUserIdByUsername(username);
 
         if (loggedInUserId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");

@@ -27,7 +27,7 @@ public class AuthenticationController {
         //SignUpRequest signUpRequest = new SignUpRequest();
         signUpRequest.setFirstname(signUpRequest.getFirstname());
         signUpRequest.setLastname(signUpRequest.getLastname());
-        signUpRequest.setEmail(signUpRequest.getEmail());
+        signUpRequest.setUsername(signUpRequest.getUsername());
         signUpRequest.setPassword(signUpRequest.getPassword());
         //signUpRequest.setImage(image);
 

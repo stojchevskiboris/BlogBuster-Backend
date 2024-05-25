@@ -55,7 +55,7 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     public Reply addReply(ReplyDTO replyDTO) {
         Comment comment=this.commentRepository.findById(replyDTO.getCommentId()).orElseThrow(InvalidCommentIdException::new);
-        User user=this.userRepository.findByEmail(UserUtils.getLoggedUserEmail()).orElseThrow(InvalidUserIdException::new);
+        User user=this.userRepository.findUserByUsername(UserUtils.getLoggedUsername()).orElseThrow(InvalidUserIdException::new);
         Reply reply=new Reply(replyDTO.getContent(),user,comment);
         reply.setReply_date(LocalDateTime.now());
         return this.replyRepository.save(reply);
@@ -66,8 +66,8 @@ public class ReplyServiceImpl implements ReplyService {
     public Reply editReply(ReplyDTO replyDTO, Long replyId) throws Exception {
         Reply reply=this.replyRepository.findById(replyId)
                 .orElseThrow(InvalidReplyIdException::new);
-        User user=this.userRepository.findByEmail(UserUtils.getLoggedUserEmail()).orElseThrow(InvalidUserIdException::new);
-        if (!reply.getAuthor().getEmail().equals(user.getEmail())) {
+        User user=this.userRepository.findUserByUsername(UserUtils.getLoggedUsername()).orElseThrow(InvalidUserIdException::new);
+        if (!reply.getAuthor().getUsername().equals(user.getUsername())) {
             throw new Exception("Reply not allowed to change");
         }
         reply.setContent(replyDTO.getContent());
@@ -79,8 +79,8 @@ public class ReplyServiceImpl implements ReplyService {
     public Reply deleteReply(Long replyId) throws Exception {
         Reply reply=this.replyRepository.findById(replyId)
                 .orElseThrow(InvalidReplyIdException::new);
-        User user=userRepository.findByEmail(UserUtils.getLoggedUserEmail()).orElseThrow(InvalidUserIdException::new);
-        if (!reply.getAuthor().getEmail().equals(user.getEmail())) {
+        User user=userRepository.findUserByUsername(UserUtils.getLoggedUsername()).orElseThrow(InvalidUserIdException::new);
+        if (!reply.getAuthor().getReplies().equals(user.getUsername())) {
             throw new Exception("Reply not allowed to change");
         }
         this.replyRepository.delete(reply);

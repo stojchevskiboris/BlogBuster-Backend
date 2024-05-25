@@ -67,22 +67,22 @@ public class PostRestController {
 
     @PostMapping("likePost/{postId}")
     public boolean likePost(@PathVariable Long postId){
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long loggedInUserId = userService.getUserIdByEmail(userEmail);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long loggedInUserId = userService.getUserIdByUsername(username);
         return userService.likePost(loggedInUserId, postId);
     }
 
     @PostMapping("unlikePost/{postId}")
     public boolean unlikePost(@PathVariable Long postId){
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long loggedInUserId = userService.getUserIdByEmail(userEmail);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long loggedInUserId = userService.getUserIdByUsername(username);
         return userService.unlikePost(loggedInUserId, postId);
     }
 
     @GetMapping("getLikedPosts")
     public List<Long> getLikedPosts(){
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long loggedInUserId = userService.getUserIdByEmail(userEmail);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long loggedInUserId = userService.getUserIdByUsername(username);
         return userService.getLikedPosts(loggedInUserId);
     }
 

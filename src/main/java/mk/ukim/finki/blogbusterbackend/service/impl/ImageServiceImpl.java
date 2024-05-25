@@ -49,7 +49,7 @@ public class ImageServiceImpl implements ImageService {
         if (post.isEmpty()) {
             throw new Exception("Post not found");
         }
-        Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
+        Optional<User> user = userRepository.findUserByUsername(UserUtils.getLoggedUsername());
         if (user.isEmpty()) {
             throw new Exception("User not found");
         }
@@ -65,8 +65,8 @@ public class ImageServiceImpl implements ImageService {
     @Transactional
     public boolean editImage(ImageDTO imageDTO) throws Exception {
         Image image=this.imageRepository.findById(imageDTO.getId()).orElseThrow(ImageNotFoundException::new);
-        Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
-        if(!image.getAuthor().getEmail().equals(user.get().getEmail()))
+        Optional<User> user = userRepository.findUserByUsername(UserUtils.getLoggedUsername());
+        if(!image.getAuthor().getUsername().equals(user.get().getUsername()))
         {
             throw new Exception("Image not allowed to change");
         }
@@ -82,11 +82,11 @@ public class ImageServiceImpl implements ImageService {
     @Transactional
     public void deleteImage(Long imageId) throws Exception {
         Image image=this.imageRepository.findById(imageId).orElseThrow(ImageNotFoundException::new);
-        Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
-        if (!image.getAuthor().getEmail().equals(user.get().getEmail())) {
+        Optional<User> user = userRepository.findUserByUsername(UserUtils.getLoggedUsername());
+        if (!image.getAuthor().getUsername().equals(user.get().getUsername())) {
             throw new Exception("Image not allowed to change");
         }
-        imageRepository.deleteById(imageId);
+    imageRepository.deleteById(imageId);
     }
 
     @PostMapping("/addMultipart")
@@ -97,7 +97,7 @@ public class ImageServiceImpl implements ImageService {
                                      @RequestParam("userId") String userId) throws IOException {
 
 
-        Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
+        Optional<User> user = userRepository.findUserByUsername(UserUtils.getLoggedUsername());
         if (user.isEmpty()) {
             throw new UserNotFoundException(" ");
         }

@@ -25,8 +25,8 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String lastname;
 
-    @Column(name = "email", unique = true)
-    private String email;
+    @Column(name = "username", unique = true)
+    private String username;
 
     @Column(name = "password")
     private String password;
@@ -59,10 +59,10 @@ public class User implements UserDetails {
 
 
 
-    public User(String firstName, String lastName, String email, String password, byte[] image) {
+    public User(String firstName, String lastName, String username, String password, byte[] image) {
         this.firstname = firstName;
         this.lastname = lastName;
-        this.email = email;
+        this.username = username;
         this.password = password;
         this.replies = new ArrayList<>();
         this.followingUsers = new ArrayList<>();
@@ -86,7 +86,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override

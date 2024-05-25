@@ -24,7 +24,7 @@ public interface UserService {
 
     Boolean unlikePost(Long loggedInUserId, Long postId);
 
-    Long getUserIdByEmail(String email);
+    Long getUserIdByUsername(String username);
 
     List<UserDTO> getFollowers(Long userId);
 

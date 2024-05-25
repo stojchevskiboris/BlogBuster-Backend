@@ -52,7 +52,7 @@ public class CommentServiceImpl implements CommentService {
         if (post.isEmpty()) {
             throw new Exception("Post not found");
         }
-        Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
+        Optional<User> user = userRepository.findUserByUsername(UserUtils.getLoggedUsername());
         if (user.isEmpty()) {
             throw new Exception("User not found");
         }
@@ -70,13 +70,13 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public boolean editComment(CommentDTO commentDto) throws Exception {
         Optional<Comment> comment = commentRepository.findById(commentDto.getId());
-        Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
+        Optional<User> user = userRepository.findUserByUsername(UserUtils.getLoggedUsername());
 
         if (comment.isEmpty()) {
             throw new Exception("Comment not found");
         }
 
-        if (!comment.get().getAuthor().getEmail().equals(user.get().getEmail())) {
+        if (!comment.get().getAuthor().getUsername().equals(user.get().getUsername())) {
             throw new Exception("Comment not allowed to change");
         }
         comment.get().setContent(commentDto.getContent());
@@ -87,12 +87,12 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public void deleteComment(Long commentId) throws Exception {
         Optional<Comment> comment = commentRepository.findById(commentId);
-        Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
+        Optional<User> user = userRepository.findUserByUsername(UserUtils.getLoggedUsername());
         if (comment.isEmpty()) {
             throw new Exception("Comment not found");
         }
 
-        if (!comment.get().getAuthor().getEmail().equals(user.get().getEmail())) {
+        if (!comment.get().getAuthor().getUsername().equals(user.get().getUsername())) {
             throw new Exception("Comment not allowed to change");
         }
         commentRepository.deleteById(commentId);

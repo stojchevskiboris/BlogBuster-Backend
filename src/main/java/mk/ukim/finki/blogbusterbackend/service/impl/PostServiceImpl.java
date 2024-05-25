@@ -65,7 +65,7 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     public Optional<Post> addPost(AddPostDTO data) throws Exception {
-        Optional<User> userOptional = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
+        Optional<User> userOptional = userRepository.findUserByUsername(UserUtils.getLoggedUsername());
         if (userOptional.isEmpty()) {
             throw new Exception("User not existing");
         }
@@ -109,14 +109,14 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public PostDTO editPost(AddPostDTO data) throws Exception {
         Optional<Post> optionalPost = this.postRepository.findById(data.getPostDTO().getId());
-        Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
+        Optional<User> user = userRepository.findUserByUsername(UserUtils.getLoggedUsername());
         if (optionalPost.isEmpty()) {
             throw new Exception("Post not existing");
         }
 
         Post post = optionalPost.get();
 
-        if (!post.getAuthor().getEmail().equals(user.get().getEmail())) {
+        if (!post.getAuthor().getUsername().equals(user.get().getUsername())) {
             throw new Exception("Post not allowed to change");
         }
 
@@ -155,7 +155,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void deletePost(Long postId) throws Exception {
         Optional<Post> post = this.postRepository.findById(postId);
-        Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
+        Optional<User> user = userRepository.findUserByUsername(UserUtils.getLoggedUsername());
         if (post.isEmpty()) {
             throw new Exception("Post not existing");
         }
@@ -164,7 +164,7 @@ public class PostServiceImpl implements PostService {
             throw new InvalidUserIdException();
         }
 
-        if (!post.get().getAuthor().getEmail().equals(user.get().getEmail())) {
+        if (!post.get().getAuthor().getUsername().equals(user.get().getUsername())) {
             throw new Exception("Post not allowed to change");
         }
 
@@ -224,8 +224,8 @@ public class PostServiceImpl implements PostService {
     }
 
     private List<Post> getPostByFollowedUsersImpl(){
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = this.userRepository.findByEmail(userEmail).orElseThrow(InvalidUserIdException::new);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userRepository.findUserByUsername(username).orElseThrow(InvalidUserIdException::new);
         if (user == null) {
             throw new InvalidUserIdException();
         }

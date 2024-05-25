@@ -14,7 +14,7 @@ public class UserMapper {
                 user.getId(),
                 user.getFirstname(),
                 user.getLastname(),
-                user.getEmail()
+                user.getUsername()
         );
     }
     public static List<UserDTO> MapToListViewModel(List<User> users){

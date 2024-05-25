@@ -42,7 +42,7 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) {
-                return userRepository.findByEmail(username)
+                return userRepository.findUserByUsername(username)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
             }
 
@@ -52,7 +52,7 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
     }
     @Override
     public List<UserDTO> discoverPeople(Long userId) {
-        User currentUser = userRepository.findByEmail(UserUtils.getLoggedUserEmail()).orElseThrow(InvalidUserIdException::new);
+        User currentUser = userRepository.findUserByUsername(UserUtils.getLoggedUsername()).orElseThrow(InvalidUserIdException::new);
         List<User> nonFollowers = userRepository.findAll().stream().
                 filter(user -> !user.equals(currentUser) && !currentUser.getFollowingUsers().contains(user))
                 .sorted(Comparator.comparingInt(user -> user.getFollowingUsers().size()))
@@ -190,8 +190,8 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
     }
 
     @Override
-    public Long getUserIdByEmail(String email) {
-        User user = userRepository.findByEmail(email)
+    public Long getUserIdByUsername(String username) {
+        User user = userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return user.getId();
     }
@@ -211,8 +211,8 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
     }
 
     public UserDTO getUserDetails(){
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long loggedInUserId = getUserIdByEmail(userEmail);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long loggedInUserId = getUserIdByUsername(username);
         User user=this.userRepository.findById(loggedInUserId).orElseThrow(InvalidUserIdException::new);
         return UserMapper.MapToViewModel(user);
     }
@@ -237,10 +237,10 @@ public class UserService implements mk.ukim.finki.blogbusterbackend.service.User
 
     @Override
     public List<UserDTO> searchUsers(String context) {
-        User currentUser = userRepository.findByEmail(UserUtils.getLoggedUserEmail()).orElseThrow(InvalidUserIdException::new);
+        User currentUser = userRepository.findUserByUsername(UserUtils.getLoggedUsername()).orElseThrow(InvalidUserIdException::new);
         List<User>user=userRepository.findAll().stream()
                 .filter(u->!u.equals(currentUser))
-                .filter(u->u.getEmail().toLowerCase().contains(context.toLowerCase()) ||
+                .filter(u->u.getUsername().toLowerCase().contains(context.toLowerCase()) ||
                         u.getFirstname().toLowerCase().contains(context.toLowerCase()) ||
                         u.getLastname().toLowerCase().contains(context.toLowerCase()))
                 .limit(5)
