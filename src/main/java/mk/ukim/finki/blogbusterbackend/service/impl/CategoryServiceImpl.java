@@ -121,7 +121,7 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category>categories=this.categoryRepository.findAll().stream()
                 .filter(cat->!cat.getFollowers().contains(currentUser))
                 .sorted((c1,c2)->Integer.compare(c1.getFollowers().size(),c2.getFollowers().size()))
-                .limit(10)
+                //.limit(10)
                 .collect(Collectors.toList());
         return CategoryMapper.MapToListViewModel(categories);
     }
