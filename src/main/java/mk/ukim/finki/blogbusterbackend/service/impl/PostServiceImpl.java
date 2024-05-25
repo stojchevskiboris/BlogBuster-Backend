@@ -11,6 +11,9 @@ import mk.ukim.finki.blogbusterbackend.model.mappers.PostMapper;
 import mk.ukim.finki.blogbusterbackend.repository.*;
 import mk.ukim.finki.blogbusterbackend.service.PostService;
 import mk.ukim.finki.blogbusterbackend.utils.UserUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -39,7 +42,8 @@ public class PostServiceImpl implements PostService {
     }
 
     public List<PostDTO> getAllPosts() {
-        List<Post> posts = this.postRepository.findAll();
+        // List<Post> posts = this.postRepository.findAll();
+        List<Post> posts = getPostByFollowedUsersImpl();
         // Sort the posts by modified date in descending order
 //        posts.sort(Comparator.comparing(Post::getModified_date).reversed());
         posts.sort(Comparator.comparing(
@@ -173,44 +177,6 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(postId);
     }
 
-    @Transactional
-    public void deletePost2(Long postId) throws Exception {
-        Optional<Post> post = this.postRepository.findById(postId);
-        Optional<User> user = userRepository.findByEmail(UserUtils.getLoggedUserEmail());
-        if (post.isEmpty()) {
-            throw new Exception("Post not existing");
-        }
-
-        if (!post.get().getAuthor().getEmail().equals(user.get().getEmail())) {
-            throw new Exception("Post not allowed to change");
-        }
-
-        postRepository.deleteById(postId);
-//        List<Image> images = imageRepository.findImagesByPostId(postId);
-//        if (images != null && !images.isEmpty()) {
-//            imageRepository.deleteAll(images);
-//        }
-//        List<Comment> comments = commentRepository.findCommentsByPostId(postId);
-//        if (comments != null && !images.isEmpty()) {
-//            for(Comment c : comments){
-//                List<Reply> replies = replyRepository.findAllByCommentId(c.getId());
-//                if (replies != null && !images.isEmpty()) {
-//                    replyRepository.deleteAll(replies);
-//                }
-//            }
-//            commentRepository.deleteAll(comments);
-//        }
-//        var users = userRepository.findAll();
-//        for(User u : users){
-//            for(Post p : u.getLikedPosts()){
-//                if (p.getId() == postId){
-//                    // remove this post from u.likedPosts
-//                }
-//            }
-//        }
-
-    }
-
     //method for converting Date object to String ---> used for the search part
     public String convertDateToString(LocalDateTime creationDate) {
         DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
@@ -220,7 +186,8 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     public List<PostDTO> filterPosts(FilterDTO filterDTO) {
-        List<Post> posts = postRepository.findAll();
+        //List<Post> posts = postRepository.findAll();
+        List<Post> posts = getPostByFollowedUsersImpl();
         posts = posts.stream()
                 .filter(p -> (filterDTO.getCategoryId() == null || p.getCategory().getId().equals(filterDTO.getCategoryId())))
                 .filter(p -> (filterDTO.getAuthorUsername() == null || filterDTO.getAuthorUsername().isEmpty() || p.getAuthor().getUsername().toLowerCase().contains(filterDTO.getAuthorUsername().toLowerCase())))
@@ -253,10 +220,18 @@ public class PostServiceImpl implements PostService {
 
     @Override // prikaz na postovi koga korsinikot ke poseti dr profil
     public List<PostDTO> getPostsFromUserProfile(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
-        List<User> users = userRepository.findAll();
-        List<Post> postsOfAllUsers =postRepository.findPostsByAuthorId(user.getId()).stream().toList();
-        return PostMapper.MapToListViewModel(postsOfAllUsers);
+        return PostMapper.MapToListViewModel(getPostByFollowedUsersImpl());
     }
 
+    private List<Post> getPostByFollowedUsersImpl(){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userRepository.findByEmail(userEmail).orElseThrow(InvalidUserIdException::new);
+        if (user == null) {
+            throw new InvalidUserIdException();
+        }
+        List<User> followingUsers = user.getFollowingUsers();
+        return followingUsers.stream()
+                .flatMap(followingUser -> postRepository.findPostsByAuthorId(followingUser.getId()).stream())
+                .collect(Collectors.toList());
+    }
 }
