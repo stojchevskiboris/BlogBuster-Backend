@@ -221,7 +221,9 @@ public class PostServiceImpl implements PostService {
 
     @Override // prikaz na postovi koga korsinikot ke poseti dr profil
     public List<PostDTO> getPostsFromUserProfile(Long userId) {
-        return PostMapper.MapToListViewModel(getPostByFollowedUsersImpl());
+        User user = userRepository.findById(userId).orElseThrow(InvalidUserIdException::new);
+        List<Post> postsOfUser =postRepository.findPostsByAuthorId(user.getId()).stream().toList();
+        return PostMapper.MapToListViewModel(postsOfUser);
     }
 
     private List<Post> getPostByFollowedUsersImpl() {
