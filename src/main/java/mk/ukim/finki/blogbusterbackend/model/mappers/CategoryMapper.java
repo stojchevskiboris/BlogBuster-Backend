@@ -39,4 +39,16 @@ public class CategoryMapper {
         }
         return categoryKeyValues;
     }
+
+    public static KeyValue MapToKeyValueDomain(Category domainModel){
+        return new KeyValue(domainModel.getId(), domainModel.getName());
+    }
+
+    public static List<KeyValue> MapToKeyValueDomainList(List<Category> domainList){
+        List<KeyValue> categoryKeyValues = new ArrayList<>();
+        for (var cat : domainList){
+            categoryKeyValues.add(MapToKeyValueDomain(cat));
+        }
+        return categoryKeyValues;
+    }
 }

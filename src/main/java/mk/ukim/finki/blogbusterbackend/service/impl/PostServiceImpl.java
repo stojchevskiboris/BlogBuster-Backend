@@ -230,9 +230,14 @@ public class PostServiceImpl implements PostService {
 
         List<User> followingUsers = new ArrayList<>(user.getFollowingUsers()); // Create a new list to avoid modifying the original
         followingUsers.add(user); // Add the current user to the new list
-
-        return followingUsers.stream()
+        List<Post> posts = followingUsers.stream()
                 .flatMap(followingUser -> postRepository.findPostsByAuthorId(followingUser.getId()).stream())
                 .collect(Collectors.toList());
+
+        posts.sort(Comparator.comparing(
+                        Post::getModified_date, Comparator.nullsLast(Comparator.reverseOrder()))
+                .thenComparing(Post::getCreation_date, Comparator.nullsLast(Comparator.reverseOrder())));
+
+        return posts;
     }
 }

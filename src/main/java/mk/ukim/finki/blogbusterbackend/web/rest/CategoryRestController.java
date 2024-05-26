@@ -68,4 +68,10 @@ public class CategoryRestController {
     {
         return this.categoryService.discoverCategories(userId);
     }
+
+    @GetMapping("/getFollowedCategories")
+    public List<KeyValue> getFollowedCategories()
+    {
+        return this.categoryService.getFollowedCategories();
+    }
 }

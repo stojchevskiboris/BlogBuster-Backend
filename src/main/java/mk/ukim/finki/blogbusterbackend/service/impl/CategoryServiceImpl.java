@@ -12,11 +12,13 @@ import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidCategoryNameExcep
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidPostIdException;
 import mk.ukim.finki.blogbusterbackend.model.exceptions.InvalidUserIdException;
 import mk.ukim.finki.blogbusterbackend.model.mappers.CategoryMapper;
+import mk.ukim.finki.blogbusterbackend.model.mappers.KeyValue;
 import mk.ukim.finki.blogbusterbackend.model.mappers.PostMapper;
 import mk.ukim.finki.blogbusterbackend.repository.CategoryRepository;
 import mk.ukim.finki.blogbusterbackend.repository.PostRepository;
 import mk.ukim.finki.blogbusterbackend.repository.UserRepository;
 import mk.ukim.finki.blogbusterbackend.service.CategoryService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -42,9 +44,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<PostDTO> getPostsByCategoryId(Long id) {
-        return PostMapper.MapToListViewModel(this.categoryRepository.findById(id).
-                orElseThrow(InvalidCategoryIdException::new).getPosts());
+    public List<PostDTO> getPostsByCategoryId(Long categoryId) {
+        return PostMapper.MapToListViewModel(postRepository.findPostsByCategoryId(categoryId));
     }
 
     @Override
@@ -124,5 +125,18 @@ public class CategoryServiceImpl implements CategoryService {
                 //.limit(10)
                 .collect(Collectors.toList());
         return CategoryMapper.MapToListViewModel(categories);
+    }
+
+    @Override
+    public List<KeyValue> getFollowedCategories() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = this.userRepository.findByEmail(userEmail).orElseThrow(InvalidUserIdException::new);
+
+        List<Category>categories=this.categoryRepository.findAll().stream()
+                .filter(cat->cat.getFollowers().contains(currentUser))
+                .sorted((c1,c2)->Integer.compare(c1.getFollowers().size(),c2.getFollowers().size()))
+                //.limit(10)
+                .collect(Collectors.toList());
+        return CategoryMapper.MapToKeyValueDomainList(categories);
     }
 }

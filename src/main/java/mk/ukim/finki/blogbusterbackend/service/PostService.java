@@ -17,7 +17,6 @@ public interface PostService {
     void deletePost(Long postId) throws Exception;
     List<PostDTO> filterPosts(FilterDTO filterDTO);
     List<PostDTO> getPostsByFollowedUsers(Long userId);
-
     List<PostDTO> getPostsFromUserProfile(Long userId);
     int totalLikesOfPost(Long postId) throws Exception;
 }

@@ -5,6 +5,7 @@ import mk.ukim.finki.blogbusterbackend.model.Post;
 import mk.ukim.finki.blogbusterbackend.model.User;
 import mk.ukim.finki.blogbusterbackend.model.dto.CategoryDTO;
 import mk.ukim.finki.blogbusterbackend.model.dto.PostDTO;
+import mk.ukim.finki.blogbusterbackend.model.mappers.KeyValue;
 
 import java.util.List;
 
@@ -18,5 +19,6 @@ public interface CategoryService {
     Category deleteCategory(Long id);
     Category addPostToCategory(Long categoryId, Long postId) throws Exception;
     Category removePostFromCategory(Long categoryId, Long postId) throws Exception;
-    List<CategoryDTO>discoverCategories(Long userId);
+    List<CategoryDTO> discoverCategories(Long userId);
+    List<KeyValue> getFollowedCategories();
 }
