@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://blog-buster-fronted.vercel.app/")
 @RequiredArgsConstructor
 public class AuthenticationController {
 

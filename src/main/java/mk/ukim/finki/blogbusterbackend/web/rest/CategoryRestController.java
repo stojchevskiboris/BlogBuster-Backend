@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://blog-buster-fronted.vercel.app/")
 public class CategoryRestController {
 
     private final CategoryService categoryService;

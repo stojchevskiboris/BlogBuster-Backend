@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/images")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://blog-buster-fronted.vercel.app/")
 @RequiredArgsConstructor
 public class ImageController {
     private final ImageService imageService;
