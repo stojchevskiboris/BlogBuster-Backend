@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/comments")
-@CrossOrigin(origins = "https://blog-buster-fronted.vercel.app/")
+@CrossOrigin(origins = "https://blogbuster-jade.vercel.app/")
 public class CommentRestController {
     private final CommentServiceImpl commentService;
 

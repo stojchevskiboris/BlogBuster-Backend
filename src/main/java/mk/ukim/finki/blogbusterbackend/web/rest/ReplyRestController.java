@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/replies")
-@CrossOrigin(origins = "https://blog-buster-fronted.vercel.app/")
+@CrossOrigin(origins = "https://blogbuster-jade.vercel.app/")
 
 public class ReplyRestController {
     private final ReplyService replyService;

@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
-@CrossOrigin(origins = "https://blog-buster-fronted.vercel.app/")
+@CrossOrigin(origins = "https://blogbuster-jade.vercel.app/")
 public class PostRestController {
     private final PostService postService;
     private final UserService userService;
